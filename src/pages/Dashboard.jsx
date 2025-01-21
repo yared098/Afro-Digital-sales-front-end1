@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
+// App.js or Dashboard.js
+import '../chartConfig';  // Import the chart configuration to register components
+import { FaHome, FaUser, FaCog, FaSignOutAlt } from 'react-icons/fa'; // Import icons
 import { useNavigate } from 'react-router-dom';
 import { signOut } from '../services/auth/authService'; // Import the signOut function
 import Sidebar from '../components/Sidebar';  // Import the Sidebar component
 import DashboardCard from '../components/DashboardCard';  // Import DashboardCard
 import BusinessProgress from '../components/BusinessProgress';  // Import BusinessProgress
+import ShowChart from '../components/ShowChart'; // Import ShowChart component
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -17,13 +21,39 @@ const Dashboard = () => {
       console.error('Error signing out:', error);
     }
   };
+  
+  const [chartType, setChartType] = useState('line'); // 'line' or 'bar'
+
+  const chartData = {
+    labels: ['January', 'February', 'March', 'April', 'May'], // Example labels
+    datasets: [
+      {
+        label: 'Sales Over Time',
+        data: [30, 50, 70, 90, 110], // Example sales data
+        borderColor: 'rgba(75, 192, 192, 1)', // Line color for line chart
+        backgroundColor: 'rgba(75, 192, 192, 0.2)', // Fill color for line chart
+        borderWidth: 2,
+        fill: true, // Enable the fill under the line
+      },
+    ],
+  };
+
+  const chartOptions = {
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: 120, // Max value for y-axis
+      },
+    },
+    maintainAspectRatio: false, // Allow chart resizing
+  };
 
   // Data to be passed as props
   const menuItems = [
-    { name: 'Overview', link: '#', icon: '📊' },
-    { name: 'Settings', link: '#', icon: '⚙️' },
-    { name: 'Profile', link: '#', icon: '👤' },
-    { name: 'Reports', link: '#', icon: '📈' },
+    { name: 'Overview', link: '/overview', icon: FaHome },
+    { name: 'Profile', link: '/profile', icon: FaUser },
+    { name: 'Settings', link: '/settings', icon: FaCog },
+    { name: 'Logout', link: '/logout', icon: FaSignOutAlt },
   ];
 
   const cardData = [
@@ -33,11 +63,6 @@ const Dashboard = () => {
     { title: 'Reviews', number: 120, icon: '⭐', bgColor: 'red-500', textColor: 'white' },
   ];
 
-  const businessProgressData = {
-    progress: 60,
-    goal: 100,
-  };
-
   return (
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
@@ -46,11 +71,11 @@ const Dashboard = () => {
       {/* Main Content */}
       <div className="flex-1 p-4">
         {/* Navbar */}
-        <nav className="bg-blue-500 p-4 flex justify-between items-center">
+        <nav className="bg-gray-800 p-4 flex justify-between items-center">
           <h1 className="text-white text-xl">Dashboard</h1>
           <button
             onClick={handleLogout}
-            className="text-white bg-red-500 px-4 py-2 rounded hover:bg-red-600"
+            className="text-white bg-yellow-500 px-4 py-2 rounded hover:bg-red-600"
           >
             Log Out
           </button>
@@ -70,16 +95,12 @@ const Dashboard = () => {
           ))}
         </div>
 
-        {/* Business Progress */}
-        <BusinessProgress
-          progress={businessProgressData.progress}
-          goal={businessProgressData.goal}
+        {/* Dynamic Chart */}
+        <ShowChart
+          chartType={chartType}   // Pass chart type ('line' or 'bar')
+          chartData={chartData}   // Pass the chart data
+          chartOptions={chartOptions}  // Pass the chart options
         />
-
-        {/* Footer */}
-        <footer className="bg-blue-500 p-4 mt-10 text-white text-center">
-          <p>&copy; 2025 Your Company. All rights reserved.</p>
-        </footer>
       </div>
     </div>
   );

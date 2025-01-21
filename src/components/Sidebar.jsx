@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { FaHome, FaUser, FaCog, FaSignOutAlt } from 'react-icons/fa'; // Import icons
 
-const Sidebar = () => {
-  const [isCollapsed, setIsCollapsed] = useState(false); // State to toggle collapse
+const Sidebar = ({ menuItems }) => {  // Accept dynamic menu items as props
+  const [isCollapsed, setIsCollapsed] = useState(false);  // State to toggle collapse
   const toggleSidebar = () => setIsCollapsed(!isCollapsed);
 
   return (
@@ -16,30 +16,14 @@ const Sidebar = () => {
 
       <nav className="mt-6">
         <ul>
-          <li>
-            <a href="/dashboard" className={`flex items-center p-4 hover:bg-gray-700 ${isCollapsed ? 'justify-center' : ''}`}>
-              <FaHome size={24} className={`mr-4 ${isCollapsed ? 'mx-auto' : ''}`} />
-              <span className={`${isCollapsed ? 'hidden' : ''}`}>Dashboard</span>
-            </a>
-          </li>
-          <li>
-            <a href="/profile" className={`flex items-center p-4 hover:bg-gray-700 ${isCollapsed ? 'justify-center' : ''}`}>
-              <FaUser size={24} className={`mr-4 ${isCollapsed ? 'mx-auto' : ''}`} />
-              <span className={`${isCollapsed ? 'hidden' : ''}`}>Profile</span>
-            </a>
-          </li>
-          <li>
-            <a href="/settings" className={`flex items-center p-4 hover:bg-gray-700 ${isCollapsed ? 'justify-center' : ''}`}>
-              <FaCog size={24} className={`mr-4 ${isCollapsed ? 'mx-auto' : ''}`} />
-              <span className={`${isCollapsed ? 'hidden' : ''}`}>Settings</span>
-            </a>
-          </li>
-          <li>
-            <a href="/logout" className={`flex items-center p-4 hover:bg-gray-700 ${isCollapsed ? 'justify-center' : ''}`}>
-              <FaSignOutAlt size={24} className={`mr-4 ${isCollapsed ? 'mx-auto' : ''}`} />
-              <span className={`${isCollapsed ? 'hidden' : ''}`}>Logout</span>
-            </a>
-          </li>
+          {menuItems.map((item, index) => (
+            <li key={index}>
+              <a href={item.link} className={`flex items-center p-4 hover:bg-gray-700 ${isCollapsed ? 'justify-center' : ''}`}>
+                <item.icon size={24} className={`mr-4 ${isCollapsed ? 'mx-auto' : ''}`} />
+                <span className={`${isCollapsed ? 'hidden' : ''}`}>{item.name}</span>
+              </a>
+            </li>
+          ))}
         </ul>
       </nav>
     </div>
