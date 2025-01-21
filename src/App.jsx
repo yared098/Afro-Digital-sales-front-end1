@@ -4,7 +4,7 @@ import SignUp from './pages/SignUp';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import { initializeAuth } from './services/auth/authService';
-import ProtectedRoute from './components/ProtectedRoute'; // Import ProtectedRoute
+import './App.css'; // Import Tailwind CSS here
 
 function App() {
   // Initialize Firebase Auth
@@ -16,16 +16,7 @@ function App() {
         <Route path="/" element={<Login />} /> {/* Default route */}
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
-
-        {/* Protect the dashboard route */}
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
   );
