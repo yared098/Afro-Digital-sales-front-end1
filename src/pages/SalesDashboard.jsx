@@ -10,6 +10,7 @@ const SalesDashboard = () => {
   const navigate = useNavigate();
 
   const [activeSection, setActiveSection] = useState('products'); // Set default active section to 'products'
+  const [searchQuery, setSearchQuery] = useState(''); // Search query state
 
   const [products, setProducts] = useState([
     { id: 1, name: 'Product A', price: 100 },
@@ -69,13 +70,28 @@ const SalesDashboard = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      <Sidebar menuItems={menuItems} onMenuClick={handleSectionChange}  DashboardName={"Sales Dash"}/>
+      <Sidebar menuItems={menuItems} onMenuClick={handleSectionChange} DashboardName={"Sales Dash"} />
 
       {/* Main Dashboard Area */}
-      
-      
       <div className="flex-1 p-4 overflow-hidden">
-        
+        <div className="flex justify-between items-center mb-6">
+          {/* Search Bar */}
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="p-2 border rounded-lg w-1/3"
+          />
+
+          {/* Other Navbar Items (if any) */}
+          <div>
+            <button className="p-2 text-gray-700">Profile</button>
+            <button className="p-2 text-gray-700" onClick={handleLogout}>Logout</button>
+          </div>
+        </div>
+
+        {/* Content based on active section */}
         <div className="mt-6">
           {renderContent()} {/* Dynamically render content based on active section */}
         </div>
