@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FaHome, FaUser, FaCog, FaSignOutAlt } from 'react-icons/fa'; // Import icons
 
-const Sidebar = ({ menuItems }) => {  // Accept dynamic menu items as props
+const Sidebar = ({ menuItems, onMenuClick }) => {  // Accept dynamic menu items and onMenuClick as props
   const [isCollapsed, setIsCollapsed] = useState(false);  // State to toggle collapse
   const toggleSidebar = () => setIsCollapsed(!isCollapsed);
 
@@ -18,10 +18,13 @@ const Sidebar = ({ menuItems }) => {  // Accept dynamic menu items as props
         <ul>
           {menuItems.map((item, index) => (
             <li key={index}>
-              <a href={item.link} className={`flex items-center p-4 hover:bg-gray-700 ${isCollapsed ? 'justify-center' : ''}`}>
+              <button
+                onClick={() => onMenuClick(item.link)} // Trigger the active section change
+                className={`flex items-center p-4 hover:bg-gray-700 w-full text-left ${isCollapsed ? 'justify-center' : ''}`}
+              >
                 <item.icon size={24} className={`mr-4 ${isCollapsed ? 'mx-auto' : ''}`} />
                 <span className={`${isCollapsed ? 'hidden' : ''}`}>{item.name}</span>
-              </a>
+              </button>
             </li>
           ))}
         </ul>
