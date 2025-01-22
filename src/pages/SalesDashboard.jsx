@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaChartLine, FaUser, FaCog, FaSignOutAlt } from 'react-icons/fa';
+import { FaChartLine, FaBox, FaShoppingCart, FaBell, FaUser, FaCog, FaSignOutAlt } from 'react-icons/fa';
+
 import Sidebar from '../components/Sidebar';
 import SalesProduct from './SalesProduct';
+import SalesOrder from "./SalesOrder"
 
 const SalesDashboard = () => {
   const navigate = useNavigate();
@@ -34,9 +36,9 @@ const SalesDashboard = () => {
 
   const menuItems = [
     { name: 'Sales Overview', link: 'sales-overview', icon: FaChartLine, section: 'overview' },
-    { name: 'Products', link: 'products', icon: FaChartLine, section: 'products' },
-    { name: 'Orders', link: 'orders', icon: FaChartLine, section: 'orders' },
-    { name: 'Notifications', link: 'notifications', icon: FaChartLine, section: 'notifications' },
+    { name: 'Products', link: 'products', icon: FaBox, section: 'products' }, // Changed to FaBox for product
+    { name: 'Orders', link: 'orders', icon: FaShoppingCart, section: 'orders' }, // Changed to FaShoppingCart for orders
+    { name: 'Notifications', link: 'notifications', icon: FaBell, section: 'notifications' }, // Changed to FaBell for notifications
     { name: 'Profile', link: 'profile', icon: FaUser, section: 'profile' },
     { name: 'Settings', link: 'settings', icon: FaCog, section: 'settings' },
     { name: 'Logout', link: 'logout', icon: FaSignOutAlt, section: 'logout' },
@@ -55,7 +57,7 @@ const SalesDashboard = () => {
       case 'notifications':
         return <div>Notifications Content</div>;
       case 'orders':
-        return <div>Orders Content</div>;
+        return <SalesOrder/>;
       case 'sales':
         return <div>Sales Content</div>;
       case 'settings':
@@ -67,10 +69,13 @@ const SalesDashboard = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      <Sidebar menuItems={menuItems} onMenuClick={handleSectionChange} />
+      <Sidebar menuItems={menuItems} onMenuClick={handleSectionChange}  DashboardName={"Sales Dash"}/>
 
       {/* Main Dashboard Area */}
+      
+      
       <div className="flex-1 p-4 overflow-hidden">
+        
         <div className="mt-6">
           {renderContent()} {/* Dynamically render content based on active section */}
         </div>

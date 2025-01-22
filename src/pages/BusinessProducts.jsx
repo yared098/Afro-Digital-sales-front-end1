@@ -3,10 +3,10 @@ import { FaPlus } from 'react-icons/fa';
 
 const BusinessProducts = () => {
   const [products, setProducts] = useState([
-    { id: 1, name: 'Product A', price: 100 },
-    { id: 2, name: 'Product B', price: 200 },
-    { id: 3, name: 'Product C', price: 300 },
-    { id: 4, name: 'Product D', price: 400 },
+    { id: 1, name: 'Product A', price: 100 ,discount:100},
+    { id: 2, name: 'Product B', price: 200 ,discount:100},
+    { id: 3, name: 'Product C', price: 300 ,discount:100},
+    { id: 4, name: 'Product D', price: 400,discount:100 },
   ]);
 
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -109,7 +109,7 @@ const BusinessProducts = () => {
                     value={newProduct.description}
                     onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
                     className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    rows="4"
+                    rows="0"
                   />
                 </div>
                 <div>

@@ -3,6 +3,7 @@ import { FaBuilding, FaBell, FaClipboardList, FaBox, FaChartLine, FaCog, FaSignO
 
 import Sidebar from '../components/Sidebar';
 import BusinessProducts from './BusinessProducts'; // Import BusinessProducts
+import BusinessOrder from "./BusinessOrder";
 
 const BusinessDashboard = () => {
   const [activeSection, setActiveSection] = useState('overview'); // Track active section
@@ -32,11 +33,11 @@ const BusinessDashboard = () => {
       case 'products':
         return <BusinessProducts />; // Show Products section
       case 'overview':
-        return <div>Business Overview Content</div>;
+        return <div>Buisness overview</div>;
       case 'notifications':
         return <div>Notifications Content</div>;
       case 'orders':
-        return <div>Orders Content</div>;
+        return <BusinessOrder/>;
       case 'sales':
         return <div>Sales Content</div>;
       case 'settings':
@@ -48,9 +49,11 @@ const BusinessDashboard = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
+      
       <Sidebar
         menuItems={menuItems}
         onMenuClick={(section) => setActiveSection(section)} // Update active section on click
+        DashboardName={"Buisness Dash"}
       />
       <div className="flex-1 p-4">
         <nav className="bg-gray-800 p-4 flex justify-between items-center">

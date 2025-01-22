@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { FaHome, FaUser, FaCog, FaSignOutAlt } from 'react-icons/fa'; // Import icons
 
-const Sidebar = ({ menuItems, onMenuClick }) => {  // Accept dynamic menu items and onMenuClick as props
+const Sidebar = ({ menuItems, onMenuClick ,DashboardName}) => {  // Accept dynamic menu items and onMenuClick as props
   const [isCollapsed, setIsCollapsed] = useState(false);  // State to toggle collapse
   const toggleSidebar = () => setIsCollapsed(!isCollapsed);
 
   return (
     <div className={`h-screen bg-gray-800 text-white transition-all duration-300 ${isCollapsed ? 'w-20' : 'w-64'}`}>
       <div className="flex justify-between items-center p-4">
-        <h2 className={`text-xl font-semibold transition-all ${isCollapsed ? 'hidden' : ''}`}>Dashboard</h2>
+        <h2 className={`text-xl font-semibold transition-all ${isCollapsed ? 'hidden' : ''}`}>{DashboardName}</h2>
         <button onClick={toggleSidebar} className="text-white p-2">
           {isCollapsed ? '☰' : '✖'}
         </button>
