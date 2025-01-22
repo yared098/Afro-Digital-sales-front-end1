@@ -8,14 +8,16 @@ import BusinessOrder from "./BusinessOrder";
 const BusinessDashboard = () => {
   const [activeSection, setActiveSection] = useState('overview'); // Track active section
 
+
   const handleLogout = async () => {
-    try {
-      await signOut();
-      navigate('/login');
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
-  };
+      try {
+        await signOut();
+        localStorage.removeItem('user');
+        navigate('/login');
+      } catch (error) {
+        console.error('Error signing out:', error);
+      }
+    };
 
   const menuItems = [
     { name: 'Business Overview', link: 'overview', icon: FaBuilding },
@@ -42,6 +44,9 @@ const BusinessDashboard = () => {
         return <div>Sales Content</div>;
       case 'settings':
         return <div>Settings Content</div>;
+      case "logout":
+         handleLogout();
+        return null;
       default:
         return <div>Select a section</div>;
     }
