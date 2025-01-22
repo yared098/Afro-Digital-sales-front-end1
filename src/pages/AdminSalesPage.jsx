@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FaPlus } from 'react-icons/fa';
 
 const AdminSalesPage = () => {
   const [activeTab, setActiveTab] = useState('accepted');
@@ -63,7 +64,7 @@ const AdminSalesPage = () => {
 
   return (
     <div className="relative p-6 min-h-screen bg-gray-50">
-      <h1 className="text-3xl font-semibold text-gray-800 mb-6">Admin Sales Page</h1>
+      {/* <h1 className="text-3xl font-semibold text-gray-800 mb-6">Admin Sales Page</h1> */}
 
       {/* Tabs and Search */}
       <div className="flex space-x-6 items-center mb-6">
@@ -103,11 +104,13 @@ const AdminSalesPage = () => {
       {/* Floating Action Button */}
       <button
         onClick={handleFABClick}
-        className="fixed bottom-8 right-8 bg-blue-600 text-white p-6 rounded-full shadow-lg hover:bg-blue-700 transition duration-200"
+        className="fixed bottom-6 right-6 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-700"
         title="Add New Sale"
       >
-        ➕
+         <FaPlus />
       </button>
+       
+      
 
       {/* Slide-in Form */}
       {isFormOpen && (
@@ -123,16 +126,7 @@ const AdminSalesPage = () => {
             </button>
           </div>
           <form onSubmit={handleFormSubmit}>
-            {/* <div className="mb-4">
-              <label className="block text-gray-700 mb-2">Item</label>
-              <input
-                type="text"
-                className="w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={newSale.item}
-                onChange={(e) => setNewSale({ ...newSale, item: e.target.value })}
-                required
-              />
-            </div> */}
+            
             <div className="mb-4">
               <label className="block text-gray-700 mb-2">Buyer</label>
               <input

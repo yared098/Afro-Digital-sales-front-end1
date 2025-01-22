@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FaPlus } from 'react-icons/fa';
 
 const AdminBusinessPage = () => {
   const [activeTab, setActiveTab] = useState('accepted'); // Active tab state
@@ -63,16 +64,15 @@ const AdminBusinessPage = () => {
 
   return (
     <div className="relative p-6 min-h-screen bg-gray-100">
-      <h1 className="text-3xl font-semibold text-gray-800 mb-6">Admin Business Page</h1>
+      {/* <h1 className="text-3xl font-semibold text-gray-800 mb-6">Admin Business Page</h1> */}
 
       {/* Tabs and Search */}
       <div className="flex space-x-6 items-center mb-6">
         {['accepted', 'rejected', 'pending'].map((tab) => (
           <button
             key={tab}
-            className={`px-6 py-3 rounded-lg font-medium text-lg transition duration-200 ${
-              activeTab === tab ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800 hover:bg-blue-100'
-            }`}
+            className={`px-6 py-3 rounded-lg font-medium text-lg transition duration-200 ${activeTab === tab ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800 hover:bg-blue-100'
+              }`}
             onClick={() => setActiveTab(tab)}
           >
             {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -104,10 +104,10 @@ const AdminBusinessPage = () => {
       {/* Floating Action Button */}
       <button
         onClick={handleFABClick}
-        className="fixed bottom-8 right-8 bg-blue-600 text-white p-6 rounded-full shadow-lg hover:bg-blue-700 transition duration-200"
-        title="Add New Business"
+        className="fixed bottom-6 right-6 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-700"
+        title="Add New Sale"
       >
-        ➕
+        <FaPlus />
       </button>
 
       {/* Slide-in Form */}
