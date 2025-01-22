@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard';
 // import SalesDashboard from './pages/SalesDashboard';
 // import BusinessDashboard from './pages/BusinessDashboard';
 import { initializeAuth } from './services/auth/authService';
+import BusinessProducts from './pages/BusinessProducts';
 import './App.css'; // Import Tailwind CSS here
 import HomePage from './pages/HomePage';
 
@@ -19,7 +20,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+     
+        <Route path="/dashboard" element={<SalesDashboard />} />
       </Routes>
     </Router>
   );
