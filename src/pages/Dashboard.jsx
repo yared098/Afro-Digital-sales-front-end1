@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../chartConfig';
-import { FaHome, FaUser, FaCog, FaSignOutAlt, FaBuilding, FaChartLine } from 'react-icons/fa';
+import { FaHome, FaUser, FaCog, FaSignOutAlt, FaBuilding, FaChartLine, FaShoppingCart, FaStore, FaTags } from 'react-icons/fa';
 
 import { useNavigate } from 'react-router-dom';
 import { signOut } from '../services/auth/authService';
@@ -10,17 +10,34 @@ import AdminSalesPage from "./AdminSalesPage";
 import AdminBusinessPage from "./AdminBusinessPage";
 import ShowChart from '../components/ShowChart';
 
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const [chartType, setChartType] = useState('line');
   const [user, setUser] = useState(null);
   const [activeSection, setActiveSection] = useState('overview');
+  const [stats, setStats] = useState({
+    businesses: 0,
+    sales: 0,
+    orders: 0,
+    products: 0,
+  });
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
+
+    // Simulated API call to fetch stats
+    setTimeout(() => {
+      setStats({
+        businesses: 24,
+        sales: 120,
+        orders: 340,
+        products: 89,
+      });
+    }, 1000); // Simulate delay for fetching data
   }, []);
 
   const handleLogout = async () => {
@@ -58,50 +75,74 @@ const Dashboard = () => {
   };
 
   const menuItems = [
-    { name: 'Overview', link: 'overview', icon: FaHome }, // Overview icon
-    { name: 'Profile', link: 'profile', icon: FaUser }, // Profile icon
-    { name: 'Business', link: 'business', icon: FaBuilding }, // Business icon
-    { name: 'Sales', link: 'sales', icon: FaChartLine }, // Sales icon
-    { name: 'Settings', link: 'settings', icon: FaCog }, // Settings icon
-    { name: 'Logout', link: 'logout', icon: FaSignOutAlt }, // Logout icon
+    { name: 'Overview', link: 'overview', icon: FaHome },
+    { name: 'Profile', link: 'profile', icon: FaUser },
+    { name: 'Business', link: 'business', icon: FaBuilding },
+    { name: 'Sales', link: 'sales', icon: FaChartLine },
+    { name: 'Settings', link: 'settings', icon: FaCog },
+    { name: 'Logout', link: 'logout', icon: FaSignOutAlt },
   ];
-
-  
 
   const renderContent = () => {
     switch (activeSection) {
       case 'overview':
-        return ( <div className="mt-6 bg-white p-4 rounded-lg shadow">
-          <ShowChart chartType={chartType} chartData={chartData} chartOptions={chartOptions} />
-        </div> );
-      case 'profile':
-        return <h2>Profile Section</h2>;
-      case 'business':
-        return  <AdminBusinessPage/>
-      case 'sales':
-          return <AdminSalesPage/>
-      case 'settings':
-          return <h2>Settings Section</h2>;
-      case 'logout':
-        handleLogout();
-        return null;
-      default:
-        return null;
+        return (
+          <div className="mt-6 space-y-6">
+            {/* Stats Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <DashboardCard
+                icon={<FaBuilding className="text-blue-500" />}
+                label="Businesses"
+                value={stats.businesses}
+              />
+              <DashboardCard
+                icon={<FaChartLine className="text-green-500" />}
+                label="Sales"
+                value={stats.sales}
+              />
+              <DashboardCard
+                icon={<FaShoppingCart className="text-orange-500" />}
+                label="Orders"
+                value={stats.orders}
+              />
+              <DashboardCard
+                icon={<FaTags className="text-purple-500" />}
+                label="Products"
+                value={stats.products}
+              />
+            </div>
+
+            {/* Chart */}
+            <div className="bg-white p-4 rounded-lg shadow">
+              <ShowChart chartType={chartType} chartData={chartData} chartOptions={chartOptions} />
+            </div>
+          </div>
+        );
+        case 'profile':
+          return <h2>Profile Section</h2>;
+        case 'business':
+          return  <AdminBusinessPage/>
+        case 'sales':
+            return <AdminSalesPage/>
+        case 'settings':
+            return <h2>Settings Section</h2>;
+        case 'logout':
+          handleLogout();
+          return null;
+        default:
+          return null;
     }
   };
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar */}
       <Sidebar
         menuItems={menuItems}
         onMenuClick={(section) => setActiveSection(section)}
         DashboardName="Admin"
       />
 
-      {/* Main Content */}
       <div className="flex-1 p-4">
-        {/* Navbar */}
         <nav className="bg-gray-800 p-4 flex justify-between items-center rounded-lg shadow">
           <h1 className="text-white text-xl font-bold">Dashboard</h1>
           <div className="flex items-center space-x-4">
@@ -115,14 +156,9 @@ const Dashboard = () => {
                 <span className="text-white">{user.displayName || 'Anonymous'}</span>
               </>
             )}
-            
           </div>
         </nav>
         <div className="mt-6">{renderContent()}</div>
-        {/* Dynamic Content */}
-
-       
-        
       </div>
     </div>
   );
