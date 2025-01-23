@@ -6,10 +6,10 @@ const Sidebar = ({ menuItems, onMenuClick ,DashboardName}) => {  // Accept dynam
   const toggleSidebar = () => setIsCollapsed(!isCollapsed);
 
   return (
-    <div className={`h-screen bg-gray-800 text-white transition-all duration-300 ${isCollapsed ? 'w-20' : 'w-64'}`}>
-      <div className="flex justify-between items-center p-4">
+    <div className={`h-screen sticky top-0 bg-gray-800 text-white transition-all duration-300 ${isCollapsed ? 'w-20' : 'w-64'}`}>
+      <div className="flex items-center justify-between p-4">
         <h2 className={`text-xl font-semibold transition-all ${isCollapsed ? 'hidden' : ''}`}>{DashboardName}</h2>
-        <button onClick={toggleSidebar} className="text-white p-2">
+        <button onClick={toggleSidebar} className="p-2 text-white">
           {isCollapsed ? '☰' : '✖'}
         </button>
       </div>
