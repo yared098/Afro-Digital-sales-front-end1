@@ -1,13 +1,13 @@
 import React from 'react';
 
-const DashboardCard = ({ title, number, icon, bgColor, textColor }) => (
-  <div className={`bg-${bgColor} p-4 shadow-lg rounded-lg flex items-center justify-between`}>
+const DashboardCard = ({ icon, label, value }) => (
+  <div className="bg-white p-4 rounded-lg shadow flex items-center space-x-4">
+    <div className="p-3 bg-gray-100 rounded-full">{icon}</div>
     <div>
-      <h3 className={`text-xl font-semibold text-${textColor}`}>{title}</h3>
-      <p className={`text-2xl font-bold text-${textColor}`}>{number}</p>
+      <h3 className="text-xl font-bold">{value}</h3>
+      <p className="text-gray-500">{label}</p>
     </div>
-    <div className="text-gray-600">{icon}</div>
   </div>
 );
-
 export default DashboardCard;
+

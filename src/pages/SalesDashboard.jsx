@@ -26,14 +26,15 @@ const SalesDashboard = () => {
   ]);
 
   const handleLogout = async () => {
-    try {
-      // Assume signOut is a function you have defined for logging out
-      await signOut();
-      navigate('/login');
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
-  };
+      try {
+        await signOut();
+        localStorage.removeItem('user');
+        navigate('/login');
+      } catch (error) {
+        console.error('Error signing out:', error);
+      }
+    };
+  
 
   const menuItems = [
     { name: 'Sales Overview', link: 'sales-overview', icon: FaChartLine, section: 'overview' },
@@ -63,6 +64,9 @@ const SalesDashboard = () => {
         return <div>Sales Content</div>;
       case 'settings':
         return <div>Settings Content</div>;
+      case "logout":
+          handleLogout();
+         return null;
       default:
         return <div>Select a section</div>;
     }

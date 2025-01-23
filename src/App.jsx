@@ -23,6 +23,7 @@ function App() {
         <Route path="/login" element={<Login />} />
      
         <Route path="/dashboard" element={<BusinessDashboard />} />
+
       </Routes>
     </Router>
   );

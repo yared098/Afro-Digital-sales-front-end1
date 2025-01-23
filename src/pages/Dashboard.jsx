@@ -1,48 +1,65 @@
 import React, { useState, useEffect } from 'react';
-import '../chartConfig'; // Import the chart configuration to register components
-import { FaHome, FaUser, FaCog, FaSignOutAlt } from 'react-icons/fa'; // Import icons
+import '../chartConfig';
+import { FaHome, FaUser, FaCog, FaSignOutAlt, FaBuilding, FaChartLine, FaShoppingCart, FaStore, FaTags } from 'react-icons/fa';
+
 import { useNavigate } from 'react-router-dom';
-import { signOut } from '../services/auth/authService'; // Import the signOut function
-import Sidebar from '../components/Sidebar'; // Import the Sidebar component
-import DashboardCard from '../components/DashboardCard'; // Import DashboardCard
-import BusinessProgress from '../components/BusinessProgress'; // Import BusinessProgress
-import ShowChart from '../components/ShowChart'; // Import ShowChart component
+import { signOut } from '../services/auth/authService';
+import Sidebar from '../components/Sidebar';
+import DashboardCard from '../components/DashboardCard';
+import AdminSalesPage from "./AdminSalesPage";
+import AdminBusinessPage from "./AdminBusinessPage";
+import ShowChart from '../components/ShowChart';
+
 
 const Dashboard = () => {
   const navigate = useNavigate();
-
-  const [chartType, setChartType] = useState('line'); // 'line' or 'bar'
-  const [user, setUser] = useState(null); // State to hold user info
+  const [chartType, setChartType] = useState('line');
+  const [user, setUser] = useState(null);
+  const [activeSection, setActiveSection] = useState('overview');
+  const [stats, setStats] = useState({
+    businesses: 0,
+    sales: 0,
+    orders: 0,
+    products: 0,
+  });
 
   useEffect(() => {
-    // Retrieve user info from localStorage
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
-      setUser(JSON.parse(savedUser)); // Parse and set the user object
+      setUser(JSON.parse(savedUser));
     }
+
+    // Simulated API call to fetch stats
+    setTimeout(() => {
+      setStats({
+        businesses: 24,
+        sales: 120,
+        orders: 340,
+        products: 89,
+      });
+    }, 1000); // Simulate delay for fetching data
   }, []);
 
-  // Handle logout functionality
   const handleLogout = async () => {
     try {
-      await signOut(); // Sign the user out
-      localStorage.removeItem('user'); // Clear user info from localStorage
-      navigate('/login'); // Redirect to the login page after logout
+      await signOut();
+      localStorage.removeItem('user');
+      navigate('/login');
     } catch (error) {
       console.error('Error signing out:', error);
     }
   };
 
   const chartData = {
-    labels: ['January', 'February', 'March', 'April', 'May'], // Example labels
+    labels: ['January', 'February', 'March', 'April', 'May'],
     datasets: [
       {
         label: 'Sales Over Time',
-        data: [30, 50, 70, 90, 110], // Example sales data
-        borderColor: 'rgba(75, 192, 192, 1)', // Line color for line chart
-        backgroundColor: 'rgba(75, 192, 192, 0.2)', // Fill color for line chart
+        data: [30, 50, 70, 90, 110],
+        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
         borderWidth: 2,
-        fill: true, // Enable the fill under the line
+        fill: true,
       },
     ],
   };
@@ -51,78 +68,97 @@ const Dashboard = () => {
     scales: {
       y: {
         beginAtZero: true,
-        max: 120, // Max value for y-axis
+        max: 120,
       },
     },
-    maintainAspectRatio: false, // Allow chart resizing
+    maintainAspectRatio: false,
   };
 
   const menuItems = [
-    { name: 'Overview', link: '/overview', icon: FaHome },
-    { name: 'Profile', link: '/profile', icon: FaUser },
-    { name: 'Settings', link: '/settings', icon: FaCog },
-    { name: 'Logout', link: '/logout', icon: FaSignOutAlt },
+    { name: 'Overview', link: 'overview', icon: FaHome },
+    { name: 'Profile', link: 'profile', icon: FaUser },
+    { name: 'Business', link: 'business', icon: FaBuilding },
+    { name: 'Sales', link: 'sales', icon: FaChartLine },
+    { name: 'Settings', link: 'settings', icon: FaCog },
+    { name: 'Logout', link: 'logout', icon: FaSignOutAlt },
   ];
 
-  const cardData = [
-    { title: 'Users', number: 1000, icon: '👥', bgColor: 'blue-500', textColor: 'white' },
-    { title: 'Businesses', number: 50, icon: '🏢', bgColor: 'green-500', textColor: 'white' },
-    { title: 'Sales', number: 1500, icon: '💵', bgColor: 'yellow-500', textColor: 'white' },
-    { title: 'Reviews', number: 120, icon: '⭐', bgColor: 'red-500', textColor: 'white' },
-  ];
+  const renderContent = () => {
+    switch (activeSection) {
+      case 'overview':
+        return (
+          <div className="mt-6 space-y-6">
+            {/* Stats Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <DashboardCard
+                icon={<FaBuilding className="text-blue-500" />}
+                label="Businesses"
+                value={stats.businesses}
+              />
+              <DashboardCard
+                icon={<FaChartLine className="text-green-500" />}
+                label="Sales"
+                value={stats.sales}
+              />
+              <DashboardCard
+                icon={<FaShoppingCart className="text-orange-500" />}
+                label="Orders"
+                value={stats.orders}
+              />
+              <DashboardCard
+                icon={<FaTags className="text-purple-500" />}
+                label="Products"
+                value={stats.products}
+              />
+            </div>
+
+            {/* Chart */}
+            <div className="bg-white p-4 rounded-lg shadow">
+              <ShowChart chartType={chartType} chartData={chartData} chartOptions={chartOptions} />
+            </div>
+          </div>
+        );
+        case 'profile':
+          return <h2>Profile Section</h2>;
+        case 'business':
+          return  <AdminBusinessPage/>
+        case 'sales':
+            return <AdminSalesPage/>
+        case 'settings':
+            return <h2>Settings Section</h2>;
+        case 'logout':
+          handleLogout();
+          return null;
+        default:
+          return null;
+    }
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar */}
-      <Sidebar menuItems={menuItems} />
-      
-      {/* Main Content */}
+      <Sidebar
+        menuItems={menuItems}
+        onMenuClick={(section) => setActiveSection(section)}
+        DashboardName="Admin"
+      />
+
       <div className="flex-1 p-4">
-        {/* Navbar */}
-        <nav className="bg-gray-800 p-4 flex justify-between items-center">
-          <h1 className="text-white text-xl">Dashboard</h1>
+        <nav className="bg-gray-800 p-4 flex justify-between items-center rounded-lg shadow">
+          <h1 className="text-white text-xl font-bold">Dashboard</h1>
           <div className="flex items-center space-x-4">
             {user && (
               <>
-                {/* Profile Picture */}
                 <img
                   src={user.photoURL || 'https://via.placeholder.com/40'}
                   alt="User"
-                  className="w-10 h-10 rounded-full"
+                  className="w-10 h-10 rounded-full border-2 border-gray-300"
                 />
-                {/* Username */}
                 <span className="text-white">{user.displayName || 'Anonymous'}</span>
               </>
             )}
-            <button
-              onClick={handleLogout}
-              className="text-white bg-yellow-500 px-4 py-2 rounded hover:bg-red-600"
-            >
-              Log Out
-            </button>
           </div>
         </nav>
-
-        {/* Top Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-          {cardData.map((card, index) => (
-            <DashboardCard
-              key={index}
-              title={card.title}
-              number={card.number}
-              icon={card.icon}
-              bgColor={card.bgColor}
-              textColor={card.textColor}
-            />
-          ))}
-        </div>
-
-        {/* Dynamic Chart */}
-        <ShowChart
-          chartType={chartType} // Pass chart type ('line' or 'bar')
-          chartData={chartData} // Pass the chart data
-          chartOptions={chartOptions} // Pass the chart options
-        />
+        <div className="mt-6">{renderContent()}</div>
       </div>
     </div>
   );
