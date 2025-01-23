@@ -8,7 +8,7 @@ const SalesProduct = () => {
     { id: 1, name: 'Burger', price: 100, vendorId: 1 },
     { id: 2, name: 'Pizza', price: 200, vendorId: 1 },
     { id: 3, name: 'Electronics', price: 300, vendorId: 2 },
-    { id: 4, name: 'Clibe sandwich', price: 400, vendorId: 2 },
+    { id: 4, name: 'Club sandwich', price: 400, vendorId: 2 },
     { id: 5, name: 'Product E', price: 500, vendorId: 3 },
     { id: 6, name: 'Product F', price: 600, vendorId: 3 },
     { id: 7, name: 'Product G', price: 700, vendorId: 1 },
@@ -77,13 +77,13 @@ const SalesProduct = () => {
   );
 
   return (
-    <div className="flex mt-6 h-full relative gap-6">
+    <div className="relative flex h-full gap-6 mt-6">
       {/* Products/Vendors Section */}
       <div
-        className="col-span-2 bg-white p-6 shadow-lg rounded-lg flex-1 overflow-auto resize-x"
+        className="flex-1 col-span-2 p-6 overflow-auto bg-white rounded-lg shadow-lg resize-x"
         style={{ minWidth: '250px', maxWidth: '500px' }}
       >
-        <h2 className="text-lg font-bold mb-4">{showVendors ? 'Vendors' : 'Products'}</h2>
+        <h2 className="mb-4 text-lg font-bold">{showVendors ? 'Vendors' : 'Products'}</h2>
 
         {/* Search Form */}
         <div className="mb-4">
@@ -102,10 +102,10 @@ const SalesProduct = () => {
             {filteredVendors.map((vendor) => (
               <div
                 key={vendor.id}
-                className="p-4 border rounded-lg bg-white shadow-md flex flex-col items-center justify-center cursor-pointer hover:shadow-lg"
+                className="flex flex-col items-center justify-center p-4 bg-white border rounded-lg shadow-md cursor-pointer hover:shadow-lg"
                 onClick={() => handleVendorSelect(vendor)}
               >
-                <h3 className="text-md font-bold mb-2">{vendor.name}</h3>
+                <h3 className="mb-2 font-bold text-md">{vendor.name}</h3>
               </div>
             ))}
           </div>
@@ -114,13 +114,13 @@ const SalesProduct = () => {
             {filteredProducts.map((product) => (
               <div
                 key={product.id}
-                className="p-4 border rounded-lg bg-white shadow-md flex flex-col items-center justify-center cursor-pointer hover:shadow-lg"
+                className="flex flex-col items-center justify-center p-4 bg-white border rounded-lg shadow-md cursor-pointer hover:shadow-lg"
                 draggable
                 onDragStart={(event) => handleDragStart(event, product)}
               >
-                <h3 className="text-md font-bold mb-2">{product.name}</h3>
-                <p className="text-sm text-gray-600 mb-4">${product.price}</p>
-                <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded">
+                <h3 className="mb-2 font-bold text-md">{product.name}</h3>
+                <p className="mb-4 text-sm text-gray-600">${product.price}</p>
+                <span className="px-3 py-1 text-sm text-gray-500 bg-gray-100 rounded">
                   Drag Me
                 </span>
               </div>
@@ -131,12 +131,12 @@ const SalesProduct = () => {
 
       {/* Cart Section */}
       <div
-        className="col-span-1 bg-white p-6 shadow-lg rounded-lg border-2 border-dashed border-gray-400 flex-1 overflow-auto resize-x"
+        className="flex-1 col-span-1 p-6 overflow-auto bg-white border-2 border-gray-400 border-dashed rounded-lg shadow-lg resize-x"
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         style={{ minWidth: '250px', maxWidth: '500px' }}
       >
-        <h2 className="text-lg font-bold mb-4 text-center">Cart</h2>
+        <h2 className="mb-4 text-lg font-bold text-center">Cart</h2>
 
         {/* Search Bar for Cart */}
         <div className="mb-4">
@@ -150,17 +150,17 @@ const SalesProduct = () => {
         </div>
 
         {filteredCart.length > 0 ? (
-          <div className="flex-1 overflow-y-auto p-2" style={{ maxHeight: 'calc(100vh - 200px)' }}>
+          <div className="flex-1 p-2 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 200px)' }}>
             {filteredCart.map((item, index) => (
               <div
                 key={index}
-                className="p-3 border rounded-lg bg-green-100 mb-2 flex justify-between items-center"
+                className="flex items-center justify-between p-3 mb-2 bg-green-100 border rounded-lg"
               >
                 <span>{item.name} (x{item.quantity})</span>
                 <span>${item.price * item.quantity}</span>
                 <button
                   onClick={() => handleRemoveFromCart(item.id)}
-                  className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-700"
+                  className="px-2 py-1 text-white bg-red-500 rounded hover:bg-red-700"
                 >
                   Remove
                 </button>
@@ -168,7 +168,7 @@ const SalesProduct = () => {
             ))}
           </div>
         ) : (
-          <p className="text-gray-500 text-center">
+          <p className="text-center text-gray-500">
             Drag products here to add to cart
           </p>
         )}
@@ -177,7 +177,7 @@ const SalesProduct = () => {
       {/* Floating Action Button (FAB) for Switch */}
       <button
         onClick={() => setShowVendors(!showVendors)}
-        className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 focus:outline-none"
+        className="fixed p-4 text-white bg-blue-600 rounded-full shadow-lg bottom-6 right-6 hover:bg-blue-700 focus:outline-none"
         style={{ fontSize: '24px' }}
       >
         <FaExchangeAlt />

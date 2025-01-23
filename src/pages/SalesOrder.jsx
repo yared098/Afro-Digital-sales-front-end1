@@ -29,7 +29,7 @@ const SalesOrder = () => {
     },
     {
       id: 4,
-      name: 'Clibe Sandwich',
+      name: 'Club Sandwich',
       price: 400,
       customerName: 'Lucy Brown',
       orderTime: '2025-01-22 17:00',
@@ -60,7 +60,7 @@ const SalesOrder = () => {
 
   return (
     <div className="container p-6">
-      <h1 className="text-2xl font-bold mb-4">Sales Orders</h1>
+      <h1 className="mb-4 text-2xl font-bold">Sales Orders</h1>
 
       {/* Order Search */}
       <div className="mb-6">
@@ -99,7 +99,7 @@ const SalesOrder = () => {
                 </div>
                 <p className="text-xs text-gray-600">{item.customerName}</p>
                 <p className="text-xs text-gray-500">{item.orderTime}</p>
-                <p className="font-semibold text-sm mt-2">${item.price}</p>
+                <p className="mt-2 text-sm font-semibold">${item.price}</p>
               </div>
             ))}
           </div>
@@ -109,18 +109,18 @@ const SalesOrder = () => {
       {/* Slide-in Order Details Panel */}
       {selectedOrder && (
         <div
-          className="fixed top-0 right-0 w-1/3 h-full bg-white shadow-lg p-6 transform transition-transform duration-300 ease-in-out"
+          className="fixed top-0 right-0 w-1/3 h-full p-6 transition-transform duration-300 ease-in-out transform bg-white shadow-lg"
           style={{
             transform: selectedOrder ? 'translateX(0)' : 'translateX(100%)',
           }}
         >
           <button
             onClick={handleCloseOrderDetails}
-            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+            className="absolute text-gray-500 top-4 right-4 hover:text-gray-700"
           >
             &times;
           </button>
-          <h2 className="text-2xl font-semibold mb-4">Order Details</h2>
+          <h2 className="mb-4 text-2xl font-semibold">Order Details</h2>
           <div className="space-y-4 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 150px)' }}>
             <p><strong>Order Name:</strong> {selectedOrder.name}</p>
             <p><strong>Price:</strong> ${selectedOrder.price}</p>

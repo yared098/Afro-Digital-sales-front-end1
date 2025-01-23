@@ -58,12 +58,12 @@ const BusinessDashboard = () => {
       <Sidebar
         menuItems={menuItems}
         onMenuClick={(section) => setActiveSection(section)} // Update active section on click
-        DashboardName={"Buisness Dash"}
+        DashboardName={"Business Dash"}
       />
       <div className="flex-1 p-4">
-        <nav className="bg-gray-800 p-4 flex justify-between items-center">
-          <h1 className="text-white text-xl">Business Dashboard</h1>
-          <button onClick={handleLogout} className="text-white bg-yellow-500 px-4 py-2 rounded hover:bg-red-600">
+        <nav className="flex items-center justify-between p-4 bg-gray-800">
+          <h1 className="text-xl text-white">Business Dashboard</h1>
+          <button onClick={handleLogout} className="px-4 py-2 text-white bg-yellow-500 rounded hover:bg-red-600">
             Log Out
           </button>
         </nav>
