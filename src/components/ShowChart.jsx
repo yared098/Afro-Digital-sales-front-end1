@@ -15,7 +15,7 @@ const ShowChart = ({ chartType, chartData, chartOptions }) => {
   };
 
   return (
-    <div className="mt-10 bg-white p-6 shadow-lg rounded-lg">
+    <div className="p-6 mt-10 bg-white rounded-lg shadow-lg">
       <h2 className="text-2xl font-semibold text-gray-700">Dynamic Chart</h2>
       {/* Render the chart dynamically based on the chartType */}
       <div className="mt-6" style={{ height: '300px' }}>

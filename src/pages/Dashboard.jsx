@@ -72,6 +72,7 @@ const Dashboard = () => {
       },
     },
     maintainAspectRatio: false,
+    responsive: true,
   };
 
   const menuItems = [
@@ -89,7 +90,7 @@ const Dashboard = () => {
         return (
           <div className="mt-6 space-y-6">
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
               <DashboardCard
                 icon={<FaBuilding className="text-blue-500" />}
                 label="Businesses"
@@ -113,7 +114,7 @@ const Dashboard = () => {
             </div>
 
             {/* Chart */}
-            <div className="bg-white p-4 rounded-lg shadow">
+            <div className="p-4 bg-white rounded-lg shadow">
               <ShowChart chartType={chartType} chartData={chartData} chartOptions={chartOptions} />
             </div>
           </div>
@@ -143,15 +144,15 @@ const Dashboard = () => {
       />
 
       <div className="flex-1 p-4">
-        <nav className="bg-gray-800 p-4 flex justify-between items-center rounded-lg shadow">
-          <h1 className="text-white text-xl font-bold">Dashboard</h1>
+        <nav className="flex items-center justify-between p-4 bg-gray-800 rounded-lg shadow">
+          <h1 className="text-xl font-bold text-white">Dashboard</h1>
           <div className="flex items-center space-x-4">
             {user && (
               <>
                 <img
                   src={user.photoURL || 'https://via.placeholder.com/40'}
                   alt="User"
-                  className="w-10 h-10 rounded-full border-2 border-gray-300"
+                  className="w-10 h-10 border-2 border-gray-300 rounded-full"
                 />
                 <span className="text-white">{user.displayName || 'Anonymous'}</span>
               </>
