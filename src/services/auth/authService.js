@@ -40,7 +40,7 @@ const saveUserToLocalStorage = (userInfo) => {
 // Save user info to your database
 const saveUserToDatabase = async (userInfo) => {
   try {
-    const response = await axios.post('https://your-backend-api.com/users', userInfo);
+    const response = await axios.post('http://localhost:5000/api/auth/sales', userInfo);
     console.log('User saved to database successfully:', response.data);
   } catch (error) {
     console.error('Error saving user to database:', error.message);
@@ -112,16 +112,25 @@ export const signInWithProvider = async (provider) => {
 
     const user = result.user;
     const userInfo = {
-      uid: user.uid,
       email: user.email,
-      displayName: user.displayName || 'Anonymous',
-      photoURL: user.photoURL,
-      provider,
+      username: user.displayName || 'Anonymous',
+      fullname: '',
+      s_id: user.uid,
+      logo: user.photoURL,
+      last_updated: Date.now(),
+      address:'',
+      phone: Number('0977622890'),
+      gender: 'male',
+      country:'',
+      about:'',
+      subscription_plan: 'basic',
+      password: provider
     };
 
     // Save user to localStorage and database
     saveUserToLocalStorage(userInfo);
-    // await saveUserToDatabase(userInfo);
+    
+    await saveUserToDatabase(userInfo);
 
     return user;
   } catch (error) {
