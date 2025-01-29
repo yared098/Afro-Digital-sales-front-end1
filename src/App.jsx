@@ -9,6 +9,7 @@ import SalesDashboard from './pages/SalesDashboard';
 import BusinessDashboard from './pages/BusinessDashboard';
 import './App.css'; // Import Tailwind CSS here
 import HomePage from './pages/HomePage';
+import GetStartedPage from './pages/GetStartedPage';
 
 function App() {
   // Initialize Firebase Auth
@@ -18,6 +19,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} /> {/* Default route */}
+        <Route path="/getStarted" element={<GetStartedPage />} /> {/* Default route */}
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
      
