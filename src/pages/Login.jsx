@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { signInWithEmailAndPassword, signInWithProvider, getUserFromLocalStorage } from '../services/authService'; 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { FaGoogle, FaFacebook, FaTwitter, FaInstagram } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { useAuth } from "../context/AuthContext";
@@ -9,7 +9,20 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const location = useLocation(); // Access the current location object
   const navigate = useNavigate();
+  const [dashType, setDashType] = useState('');
+
+  useEffect(() => {
+    // Extract query parameters from the URL
+    const queryParams = new URLSearchParams(location.search);
+    const type = queryParams.get('dash_type'); // Get the value of dash_type parameter
+
+    if (type) {
+      setDashType(type); // Set the dash_type if available
+    }
+  }, [location.search]);
+  
   const { login } = useAuth(); // Removed user since we fetch it after login
 
   const handleLogin = async (e) => {
@@ -18,8 +31,6 @@ const Login = () => {
     try {
       const userCredential = await signInWithEmailAndPassword(email, password);
       const user = await getUserFromLocalStorage(); // Fetch user details
-      
-
       redirectToDashboard(user.dash_type);
     } catch (error) {
       setError('Error logging in. Please try again.');
@@ -30,7 +41,6 @@ const Login = () => {
     try {
       const userCredential = await signInWithProvider(provider);
       const user = await getUserFromLocalStorage(); // Fetch user details
-      
       redirectToDashboard(user.dash_type);
     } catch (error) {
       setError(`Error logging in with ${provider}. Please try again.`);
@@ -98,7 +108,10 @@ const Login = () => {
         </div>
 
         <p className="mt-6 text-center text-sm text-gray-600">
-          Don't have an account? <a href="/signup" className="text-blue-500 hover:underline">Sign Up</a>
+          Don't have an account? 
+          <Link to={`/signup?dash_type=${dashType}`} className="text-blue-500 hover:underline">
+            Sign Up
+          </Link>
         </p>
       </motion.div>
     </div>

@@ -20,7 +20,7 @@ const saveUserToLocalStorage = (userData) => {
 };
 
 // Sign up with email and password
-export const signUpWithEmailAndPassword = async (email, password, username, phoneNumber) => {
+export const signUpWithEmailAndPassword = async (email, password, username, phoneNumber,dashType) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
@@ -32,7 +32,7 @@ export const signUpWithEmailAndPassword = async (email, password, username, phon
       email: user.email,
       phoneNumber,
       provider: email,
-      dash_type:'business_dashboard',
+      dash_type:dashType,
       
     };
 

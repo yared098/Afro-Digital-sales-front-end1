@@ -1,17 +1,29 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleDropdownSelection = (type) => {
+    navigate(`/login?dash_type=${type}`);
+    setIsDropdownOpen(false);
   };
 
   return (
     <nav className="p-2 bg-[#00002eec]">
       <div className="flex items-center justify-between mx-auto max-w-7xl">
         <div className="flex items-center">
-          <a href="/" >
+          <a href="/">
             <img src="/Logo.png" alt="logo" className="rounded-full max-w-14"/>
           </a>
         </div>
@@ -24,14 +36,38 @@ const Navbar = () => {
           <a href="/contact" className="text-white transition-all duration-300 hover:text-indigo-400">Contact</a>
         </div>
 
-        {/* "Get Started" Button */}
-        <div className="flex items-center">
-          <a
-            href="/login"
+        {/* "Get Started" Button with Dropdown */}
+        <div className="relative flex items-center">
+          <button
+            onClick={toggleDropdown}
             className="px-6 py-2 ml-4 text-lg font-semibold text-white transition-all duration-300 bg-indigo-600 rounded-lg hover:bg-indigo-700"
           >
             Get Started
-          </a>
+          </button>
+
+          {/* Dropdown Menu */}
+          {isDropdownOpen && (
+            <div className="absolute right-0 mt-2 p-2 space-y-2 bg-[#00002E] rounded-md shadow-lg z-50">
+              <button
+                onClick={() => handleDropdownSelection('sales_dashboard')}
+                className="block text-lg text-white font-semibold transition-all duration-300 hover:text-indigo-400"
+              >
+                Sales
+              </button>
+              <button
+                onClick={() => handleDropdownSelection('business_dashboard')}
+                className="block text-lg text-white font-semibold transition-all duration-300 hover:text-indigo-400"
+              >
+                Business
+              </button>
+              <button
+                onClick={() => handleDropdownSelection('other_dashboard')}
+                className="block text-lg text-white font-semibold transition-all duration-300 hover:text-indigo-400"
+              >
+                Other
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Mobile Menu Button */}

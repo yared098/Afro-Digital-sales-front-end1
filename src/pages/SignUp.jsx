@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   signUpWithEmailAndPassword,
   signInWithGoogle,
@@ -15,16 +16,29 @@ const SignUp = () => {
   const [username, setUsername] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [error, setError] = useState("");
+
+  const location = useLocation(); // Access the current location object
   const navigate = useNavigate();
+  const [dashType, setDashType] = useState('');
+
+  useEffect(() => {
+    // Extract query parameters from the URL
+    const queryParams = new URLSearchParams(location.search);
+    const type = queryParams.get('dash_type'); // Get the value of dash_type parameter
+
+    if (type) {
+      setDashType(type); // Set the dash_type if available
+    }
+  }, [location.search]);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
-      const userData = await signUpWithEmailAndPassword(email, password, username, phoneNumber);
+      const userData = await signUpWithEmailAndPassword(email, password, username, phoneNumber,dashType);
       const user = await getUserFromLocalStorage(); // Fetch user details
-            
+
       redirectToDashboard(user.dash_type);
-      
+
     } catch (error) {
       setError(error.message || "Error signing up. Please try again.");
     }
@@ -34,7 +48,7 @@ const SignUp = () => {
       case "sales_dashboard":
         navigate("/sales-dashboard", { replace: true });
         break;
-      case "business_dashboard": 
+      case "business_dashboard":
         navigate("/business-dashboard", { replace: true });
         break;
       default:
@@ -42,7 +56,7 @@ const SignUp = () => {
     }
   };
 
-  
+
 
   return (
     <div className="bg-gradient-to-br from-green-400 to-white w-full min-h-screen flex justify-center items-center">
@@ -128,7 +142,7 @@ const SignUp = () => {
           </motion.button>
         </form>
 
-      
+
 
         {/* Login Redirect */}
         <p className="mt-6 text-center text-sm text-gray-600">
