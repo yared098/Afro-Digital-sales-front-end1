@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import '../chartConfig';
 import { FaHome, FaUser, FaCog, FaSignOutAlt, FaBuilding, FaChartLine, FaShoppingCart, FaStore, FaTags } from 'react-icons/fa';
-
+import { useAuth } from "../context/AuthContext";
+import { fetchData } from "../services/dbService"; // Import Firebase service
 import { useNavigate } from 'react-router-dom';
-import { signOut } from '../services/auth/authService';
 import Sidebar from '../components/Sidebar';
 import DashboardCard from '../components/DashboardCard';
 import AdminSalesPage from "./AdminSalesPage";
@@ -12,9 +12,13 @@ import ShowChart from '../components/ShowChart';
 
 
 const Dashboard = () => {
+  const { user, logout } = useAuth();
+  const [users, setUsers] = useState([]);
+  console.log("Admin user info",users)
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [chartType, setChartType] = useState('line');
-  const [user, setUser] = useState(null);
+
   const [activeSection, setActiveSection] = useState('overview');
   const [stats, setStats] = useState({
     businesses: 0,
@@ -22,33 +26,26 @@ const Dashboard = () => {
     orders: 0,
     products: 0,
   });
-
+  // Fetch user data from Firebase
   useEffect(() => {
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
+    const getUsers = async () => {
+      try {
+        const userData = await fetchData();
+        setUsers(userData);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        setLoading(false);
+      }
+    };
 
-    // Simulated API call to fetch stats
-    setTimeout(() => {
-      setStats({
-        businesses: 24,
-        sales: 120,
-        orders: 340,
-        products: 89,
-      });
-    }, 1000); // Simulate delay for fetching data
-  }, []);
-
-  const handleLogout = async () => {
-    try {
-      await signOut();
-      localStorage.removeItem('user');
-      navigate('/login');
-    } catch (error) {
-      console.error('Error signing out:', error);
+    if (user) {
+      getUsers(); // Only fetch users if logged in
     }
-  };
+  }, [user]);
+
+
+
 
   const chartData = {
     labels: ['January', 'February', 'March', 'April', 'May'],
@@ -119,19 +116,19 @@ const Dashboard = () => {
             </div>
           </div>
         );
-        case 'profile':
-          return <h2>Profile Section</h2>;
-        case 'business':
-          return  <AdminBusinessPage/>
-        case 'sales':
-            return <AdminSalesPage/>
-        case 'settings':
-            return <h2>Settings Section</h2>;
-        case 'logout':
-          handleLogout();
-          return null;
-        default:
-          return null;
+      case 'profile':
+        return <h2>Profile Section</h2>;
+      case 'business':
+        return <AdminBusinessPage />
+      case 'sales':
+        return <AdminSalesPage />
+      case 'settings':
+        return <h2>Settings Section</h2>;
+      case 'logout':
+        logout();
+        return null;
+      default:
+        return null;
     }
   };
 

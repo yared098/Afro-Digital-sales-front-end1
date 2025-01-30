@@ -8,7 +8,7 @@ import CTA from "../components/CTA";
 
 const HomePage = () => {
   return (
-    <div className="text-white ">
+    <div className="text-green ">
       <Navbar />
       <Hero />
       <About />

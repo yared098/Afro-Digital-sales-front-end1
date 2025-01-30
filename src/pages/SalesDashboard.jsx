@@ -5,12 +5,15 @@ import { FaChartLine, FaBox, FaShoppingCart, FaBell, FaUser, FaCog, FaSignOutAlt
 import Sidebar from '../components/Sidebar';
 import SalesProduct from './SalesProduct';
 import SalesOrder from "./SalesOrder"
+import { useAuth } from "../context/AuthContext";
+
 
 const SalesDashboard = () => {
   const navigate = useNavigate();
 
   const [activeSection, setActiveSection] = useState('products'); // Set default active section to 'products'
   const [searchQuery, setSearchQuery] = useState(''); // Search query state
+  const { user, logout } = useAuth();
 
   const [products, setProducts] = useState([
     { id: 1, name: 'Product A', price: 100 },
@@ -65,7 +68,7 @@ const SalesDashboard = () => {
       case 'settings':
         return <div>Settings Content</div>;
       case "logout":
-          handleLogout();
+          logout();
          return null;
       default:
         return <div>Select a section</div>;

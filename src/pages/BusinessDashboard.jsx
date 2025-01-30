@@ -4,9 +4,12 @@ import { FaBuilding, FaBell, FaClipboardList, FaBox, FaChartLine, FaCog, FaSignO
 import Sidebar from '../components/Sidebar';
 import BusinessProducts from './BusinessProducts'; // Import BusinessProducts
 import BusinessOrder from "./BusinessOrder";
+import { useAuth } from "../context/AuthContext";
+
 
 const BusinessDashboard = () => {
   const [activeSection, setActiveSection] = useState('overview'); // Track active section
+   const { user, logout } = useAuth();
 
 
   const handleLogout = async () => {
@@ -45,7 +48,7 @@ const BusinessDashboard = () => {
       case 'settings':
         return <div>Settings Content</div>;
       case "logout":
-         handleLogout();
+        logout();
         return null;
       default:
         return <div>Select a section</div>;

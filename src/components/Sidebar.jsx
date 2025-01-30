@@ -4,6 +4,7 @@ import { FaHome, FaUser, FaCog, FaSignOutAlt } from 'react-icons/fa'; // Import 
 const Sidebar = ({ menuItems, onMenuClick, DashboardName }) => {
   const [isCollapsed, setIsCollapsed] = useState(false); // State to toggle collapse
   const [activeItem, setActiveItem] = useState(null); // State to track active menu item
+  
 
   const toggleSidebar = () => setIsCollapsed(!isCollapsed);
 
