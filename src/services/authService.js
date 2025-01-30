@@ -6,8 +6,18 @@ import {
   signInWithEmailAndPassword as firebaseSignInWithEmail 
 } from "firebase/auth";
 import { saveUserToDatabase, fetchUserById } from "./dbService";
-import { use } from "react";
 
+
+// Helper function to save user to localStorage
+const saveUserToLocalStorage = (userData) => {
+  localStorage.setItem("user", JSON.stringify(userData));
+};
+
+// Helper function to get user from localStorage
+const getUserFromLocalStorage = () => {
+  const user = localStorage.getItem("user");
+  return user ? JSON.parse(user) : null;
+};
 // Sign up with email and password
 export const signUpWithEmailAndPassword = async (email, password, username, phoneNumber) => {
   try {
@@ -25,6 +35,8 @@ export const signUpWithEmailAndPassword = async (email, password, username, phon
 
     // Save user details in the database
     await saveUserToDatabase(userData);
+    // Save user data to localStorage
+    saveUserToLocalStorage(userData);
 
     return userData;
   } catch (error) {
@@ -45,7 +57,8 @@ export const signInWithEmailAndPassword = async (email, password) => {
     // Fetch user data from the database
     const userData = await fetchUserById(user.uid);
 
-    
+    // Save user data to localStorage
+    saveUserToLocalStorage(userData);
     return userData; // Return fetched user data
   } catch (error) {
     console.error("Email/Password Sign-in Error:", error);
@@ -109,7 +122,10 @@ export const signInWithProvider = async (provider) => {
 
       // Save new user to the selected database
       await saveUserToDatabase(userData);
+
     }
+    // Save user data to localStorage
+    saveUserToLocalStorage(userData);
 
     return userData;
   } catch (error) {
@@ -122,6 +138,7 @@ export const signInWithProvider = async (provider) => {
 export const logout = async () => {
   try {
     await signOut(auth);
+    localStorage.removeItem("user");
   } catch (error) {
     console.error("Logout Error:", error);
   }

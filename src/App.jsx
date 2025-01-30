@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { dbConfig } from "./config/dbConfig"; // Import dbConfig
@@ -13,9 +13,21 @@ import "./App.css"; // Import Tailwind CSS
 
 const App = () => {
   const { user } = useAuth();
+  const [initialized, setInitialized] = useState(false);
 
-  // Log the current database provider (for debugging purposes)
-  console.log("Current DB Provider:", dbConfig.provider);
+  useEffect(() => {
+    // Check localStorage for user info and update state
+    const localStorageUser = localStorage.getItem("user");
+    if (localStorageUser) {
+      setInitialized(true);
+    } else {
+      setInitialized(true);
+    }
+  }, []);
+
+  if (!initialized) {
+    return <div>Loading...</div>; // Optional loading state while checking localStorage or Firebase
+  }
 
   return (
     <Router>

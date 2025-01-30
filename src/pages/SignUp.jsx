@@ -26,15 +26,7 @@ const SignUp = () => {
     }
   };
 
-  const handleSocialSignUp = async (provider) => {
-    try {
-      if (provider === "google") await signInWithGoogle();
-      if (provider === "facebook") await signInWithFacebook();
-      navigate("/dashboard");
-    } catch (error) {
-      setError(`Failed to sign up with ${provider}. Try again.`);
-    }
-  };
+  
 
   return (
     <div className="bg-gradient-to-br from-green-400 to-white w-full min-h-screen flex justify-center items-center">
@@ -120,47 +112,7 @@ const SignUp = () => {
           </motion.button>
         </form>
 
-        {/* Social Sign-Up Buttons */}
-        <div className="mt-6">
-          <p className="text-center text-gray-600 text-sm mb-2">Or sign up with</p>
-          <div className="flex justify-center space-x-4">
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              className="bg-red-500 text-white p-3 rounded-full shadow-md hover:bg-red-600"
-              onClick={() => handleSocialSignUp("google")}
-            >
-              <FaGoogle />
-            </motion.button>
-
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              className="bg-blue-600 text-white p-3 rounded-full shadow-md hover:bg-blue-700"
-              onClick={() => handleSocialSignUp("facebook")}
-            >
-              <FaFacebook />
-            </motion.button>
-
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              className="bg-blue-400 text-white p-3 rounded-full shadow-md hover:bg-blue-500"
-              onClick={() => alert("Telegram sign-up not implemented yet!")}
-            >
-              <FaTelegram />
-            </motion.button>
-
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              className="bg-pink-500 text-white p-3 rounded-full shadow-md hover:bg-pink-600"
-              onClick={() => alert("Instagram sign-up not implemented yet!")}
-            >
-              <FaInstagram />
-            </motion.button>
-          </div>
-        </div>
+      
 
         {/* Login Redirect */}
         <p className="mt-6 text-center text-sm text-gray-600">
