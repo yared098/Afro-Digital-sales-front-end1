@@ -1,12 +1,15 @@
-import { auth, googleProvider, facebookProvider } from "../config/firebaseConfig";
-import { 
-  signInWithPopup, 
-  signOut, 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword as firebaseSignInWithEmail 
-} from "firebase/auth";
-import { saveUserToDatabase, fetchUserById } from "./dbService";
 
+
+import { auth, googleProvider, facebookProvider } from "../config/firebaseConfig";
+import { supabase } from "../config/supabaseConfig"; // Supabase client
+import { signInWithPopup, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword as firebaseSignInWithEmail } from "firebase/auth";
+import axios from "axios"; // For API calls
+import { authConfig } from '../config/authConfig'; // Import the authConfig object
+
+const authProvider = authConfig.provider; // Access the provider from authConfig
+
+// Firebase and Supabase authentication methods
+let signUpWithEmailAndPassword, signInWithEmailAndPassword, signInWithGoogle, signInWithFacebook, signInWithInstagram, signInWithProvider, logout;
 
 // Helper function to save user to localStorage
 const saveUserToLocalStorage = (userData) => {
@@ -19,133 +22,293 @@ const saveUserToLocalStorage = (userData) => {
   return user ? JSON.parse(user) : null;
 };
 
-// Sign up with email and password
-export const signUpWithEmailAndPassword = async (email, password, username, phoneNumber,dashType) => {
-  try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
 
-    // Create user object with additional details
-    const userData = {
-      uid: user.uid,
-      username,
-      email: user.email,
-      phoneNumber,
-      provider: email,
-      dash_type:dashType,
-      
-    };
+// Firebase authentication functions
+if (authProvider === "firebase") {
+  signUpWithEmailAndPassword = async (email, password, username, phoneNumber, dashType) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
 
-    // Save user details in the database
-    await saveUserToDatabase(userData);
-    // Save user data to localStorage
-    saveUserToLocalStorage(userData);
-
-    return userData;
-  } catch (error) {
-    console.error("Email/Password Sign-up Error:", error);
-    throw error;
-  }
-};
-
-/** 🔹 Sign in with Email and Password */
-export const signInWithEmailAndPassword = async (email, password) => {
-  try {
-    const userCredential = await firebaseSignInWithEmail(auth, email, password);
-    const user = userCredential.user;
-    console.log("Authoservice ",user)
-
-    console.log("AuthService - Facebook User:", user.uid);
-
-    // Fetch user data from the database
-    const userData = await fetchUserById(user.uid);
-
-    // Save user data to localStorage
-    saveUserToLocalStorage(userData);
-    console.log("successfully saved user data",userData)
-    return userData; // Return fetched user data
-  } catch (error) {
-    console.error("Email/Password Sign-in Error:", error);
-    return null;
-  }
-};
-
-/** 🔹 Sign in with Google */
-export const signInWithGoogle = async () => {
-  return await signInWithProvider("google");
-};
-
-/** 🔹 Sign in with Facebook */
-export const signInWithFacebook = async () => {
-  return await signInWithProvider("facebook");
-};
-
-/** 🔹 Sign in with Instagram */
-export const signInWithInstagram = async () => {
-  return await signInWithProvider("instagram");
-};
-
-/** 🔹 Sign in with Telegram */
-export const signInWithTelegram = async () => {
-  return await signInWithProvider("telegram");
-};
-
-/** 🔹 Sign in with a specific provider dynamically */
-export const signInWithProvider = async (provider) => {
-  try {
-    let selectedProvider;
-    switch (provider) {
-      case 'google':
-        selectedProvider = googleProvider;
-        break;
-      case 'facebook':
-        selectedProvider = facebookProvider;
-        break;
-      case 'instagram':
-        selectedProvider = instagramProvider;
-        break;
-      case 'telegram':
-        selectedProvider = telegramProvider;
-        break;
-      default:
-        throw new Error("Unsupported provider");
-    }
-
-    const result = await signInWithPopup(auth, selectedProvider);
-    const user = result.user;
-
-    // Check if user exists in the database
-    let userData = await fetchUserById(user.uid);
-    if (!userData) {
-      userData = {
+      const userData = {
         uid: user.uid,
+        username,
         email: user.email,
-        provider: provider,
-        createdAt: new Date().toISOString(),
-        dash_type:'business_dashboard',
-        
+        phoneNumber,
+        provider: 'email',
+        dash_type: dashType
       };
 
-      // Save new user to the selected database
-      await saveUserToDatabase(userData);
+      await saveUserToDatabase(userData); // Save user to database (Firebase/MySQL)
+      saveUserToLocalStorage(userData);
 
+      return userData;
+    } catch (error) {
+      console.error("Firebase Sign-up Error:", error);
+      throw error;
     }
-    // Save user data to localStorage
-    saveUserToLocalStorage(userData);
+  };
 
-    return userData;
-  } catch (error) {
-    console.error(`${provider.charAt(0).toUpperCase() + provider.slice(1)} Sign-in Error:`, error);
-    return null;
-  }
+  signInWithEmailAndPassword = async (email, password) => {
+    try {
+      const userCredential = await firebaseSignInWithEmail(auth, email, password);
+      const user = userCredential.user;
+
+      const userData = {
+        uid: user.uid,
+        email: user.email,
+        provider: 'email'
+      };
+
+      await saveUserToDatabase(userData);
+      saveUserToLocalStorage(userData);
+
+      return userData;
+    } catch (error) {
+      console.error("Firebase Sign-in Error:", error);
+      return null;
+    }
+  };
+
+  signInWithGoogle = async () => {
+    return await signInWithProvider("google");
+  };
+
+  signInWithFacebook = async () => {
+    return await signInWithProvider("facebook");
+  };
+
+  signInWithInstagram = async () => {
+    return await signInWithProvider("instagram");
+  };
+
+  signInWithProvider = async (provider) => {
+    try {
+      let selectedProvider;
+      switch (provider) {
+        case 'google':
+          selectedProvider = googleProvider;
+          break;
+        case 'facebook':
+          selectedProvider = facebookProvider;
+          break;
+        default:
+          throw new Error("Unsupported provider");
+      }
+
+      const result = await signInWithPopup(auth, selectedProvider);
+      const user = result.user;
+
+      let userData = await fetchUserById(user.uid);
+      if (!userData) {
+        userData = {
+          uid: user.uid,
+          email: user.email,
+          provider: provider,
+          dash_type: 'business_dashboard',
+        };
+        await saveUserToDatabase(userData); // Save new user
+      }
+
+      saveUserToLocalStorage(userData);
+      return userData;
+    } catch (error) {
+      console.error(`${provider.charAt(0).toUpperCase() + provider.slice(1)} Sign-in Error:`, error);
+      return null;
+    }
+  };
+
+  logout = async () => {
+    try {
+      await signOut(auth);
+      localStorage.removeItem("user");
+    } catch (error) {
+      console.error("Firebase Logout Error:", error);
+    }
+  };
+}
+
+// Supabase authentication functions
+else if (authProvider === "supabase") {
+  signUpWithEmailAndPassword = async (email, password, username, phoneNumber, dashType) => {
+    try {
+      const { user, error } = await supabase.auth.signUp({ email, password });
+
+      if (error) throw error;
+
+      const userData = {
+        uid: user.id,
+        username,
+        email: user.email,
+        phoneNumber,
+        provider: 'email',
+        dash_type: dashType,
+      };
+
+      await saveUserToDatabase(userData); // Save user to Supabase/MySQL
+      saveUserToLocalStorage(userData);
+
+      return userData;
+    } catch (error) {
+      console.error("Supabase Sign-up Error:", error);
+      throw error;
+    }
+  };
+
+  signInWithEmailAndPassword = async (email, password) => {
+    try {
+      const { user, error } = await supabase.auth.signInWithPassword({ email, password });
+
+      if (error) throw error;
+
+      const userData = {
+        uid: user.id,
+        email: user.email,
+        provider: 'email',
+      };
+
+      await saveUserToDatabase(userData);
+      saveUserToLocalStorage(userData);
+
+      return userData;
+    } catch (error) {
+      console.error("Supabase Sign-in Error:", error);
+      return null;
+    }
+  };
+
+  signInWithGoogle = async () => {
+    return await signInWithProvider("google");
+  };
+
+  signInWithFacebook = async () => {
+    return await signInWithProvider("facebook");
+  };
+
+  signInWithInstagram = async () => {
+    return await signInWithProvider("instagram");
+  };
+
+  signInWithProvider = async (provider) => {
+    try {
+      const { user, error } = await supabase.auth.signInWithOAuth({ provider });
+
+      if (error) throw error;
+
+      const userData = {
+        uid: user.id,
+        email: user.email,
+        provider: provider,
+        dash_type: 'business_dashboard',
+      };
+
+      await saveUserToDatabase(userData); // Save new user
+      saveUserToLocalStorage(userData);
+
+      return userData;
+    } catch (error) {
+      console.error(`${provider.charAt(0).toUpperCase() + provider.slice(1)} Sign-in Error:`, error);
+      return null;
+    }
+  };
+
+  logout = async () => {
+    try {
+      await supabase.auth.signOut();
+      localStorage.removeItem("user");
+    } catch (error) {
+      console.error("Supabase Logout Error:", error);
+    }
+  };
+}
+
+// API authentication functions (Custom API)
+else if (authProvider === "api") {
+  const apiUrl = VITE_API_URL; // The base URL for your authentication API
+
+  signUpWithEmailAndPassword = async (email, password, username, phoneNumber, dashType) => {
+    try {
+      const response = await axios.post(`${apiUrl}/auth/signup`, {
+        email,
+        password,
+        username,
+        phoneNumber,
+        dash_type: dashType,
+      });
+
+      const userData = response.data.user;
+
+      saveUserToLocalStorage(userData);
+      await saveUserToDatabase(userData); // Save user to your database (MySQL or MongoDB)
+
+      return userData;
+    } catch (error) {
+      console.error("API Sign-up Error:", error);
+      throw error;
+    }
+  };
+
+  signInWithEmailAndPassword = async (email, password) => {
+    try {
+      const response = await axios.post(`${apiUrl}/auth/signin`, { email, password });
+
+      const userData = response.data.user;
+
+      saveUserToLocalStorage(userData);
+      await saveUserToDatabase(userData); // Save user to your database (MySQL or MongoDB)
+
+      return userData;
+    } catch (error) {
+      console.error("API Sign-in Error:", error);
+      return null;
+    }
+  };
+
+  signInWithGoogle = async () => {
+    return await signInWithProvider("google");
+  };
+
+  signInWithFacebook = async () => {
+    return await signInWithProvider("facebook");
+  };
+
+  signInWithInstagram = async () => {
+    return await signInWithProvider("instagram");
+  };
+
+  signInWithProvider = async (provider) => {
+    try {
+      const response = await axios.post(`${apiUrl}/auth/oauth`, { provider });
+      const userData = response.data.user;
+
+      saveUserToLocalStorage(userData);
+      await saveUserToDatabase(userData); // Save new user to your database (MySQL or MongoDB)
+
+      return userData;
+    } catch (error) {
+      console.error(`API ${provider.charAt(0).toUpperCase() + provider.slice(1)} Sign-in Error:`, error);
+      return null;
+    }
+  };
+
+  logout = async () => {
+    try {
+      await axios.post(`${apiUrl}/auth/logout`);
+      localStorage.removeItem("user");
+    } catch (error) {
+      console.error("API Logout Error:", error);
+    }
+  };
+}
+
+// Export the authentication methods
+export {
+  signUpWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signInWithGoogle,
+  signInWithFacebook,
+  signInWithInstagram,
+  logout,
+  signInWithProvider
 };
 
-/** 🔹 Logout function */
-export const logout = async () => {
-  try {
-    await signOut(auth);
-    localStorage.removeItem("user");
-  } catch (error) {
-    console.error("Logout Error:", error);
-  }
-};

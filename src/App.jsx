@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import HomePage from "./pages/HomePage";
@@ -11,6 +11,14 @@ import AdminDashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute"; // Import the role-based protected route
 
 const App = () => {
+   // Log the auth and database provider values from .env
+   useEffect(() => {
+    const authProvider = import.meta.env.VITE_AUTH_PROVIDER;
+    const dbProvider = import.meta.env.VITE_DB_PROVIDER;
+
+    console.log("Auth Provider:", authProvider);
+    console.log("Database Provider:", dbProvider);
+  }, []);
   return (
     <AuthProvider>
       <Router>

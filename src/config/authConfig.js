@@ -8,6 +8,13 @@ export const authConfig = {
       messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
       appId: import.meta.env.VITE_FIREBASE_APP_ID,
     },
+    supabase: {
+      url: import.meta.env.VITE_SUPABASE_URL,
+      key: import.meta.env.VITE_SUPABASE_KEY,
+    },
+    api: {
+      url: import.meta.env.VITE_API_URL, // Custom API base URL
+    },
     googleClientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
     facebookAppId: import.meta.env.VITE_FACEBOOK_APP_ID,
     instagramClientId: import.meta.env.VITE_INSTAGRAM_CLIENT_ID,
