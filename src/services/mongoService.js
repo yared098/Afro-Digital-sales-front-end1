@@ -1,61 +1,48 @@
-// import mongoose from "mongoose";
-// import { dbConfig } from "../config/dbConfig"; // Import MongoDB Config
+// apiService.js (Frontend)
+import axios from "axios";
 
-// // Connect to MongoDB using Mongoose (Mongoose 6+)
-// mongoose.connect(dbConfig.mongodb.uri, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// })
-// .then(() => console.log("Connected to MongoDB"))
-// .catch((error) => console.error("MongoDB connection error:", error));
+const API_BASE_URL = "http://localhost:5000/api"; // Update with your backend URL
 
-// // Define a Schema for MongoDB Collection
-// const DataSchema = new mongoose.Schema({
-//   name: { type: String, required: true },
-//   email: { type: String, required: true },
-//   age: { type: Number, required: true },
-// });
+// Fetch Data
+export const fetchDataFromMongoDB = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/data`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return [];
+  }
+};
 
-// // Create a Model
-// const DataModel = mongoose.model("Data", DataSchema);
+// Add Data
+export const addDataToMongoDB = async (data) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/data`, data);
+    return response.data;
+  } catch (error) {
+    console.error("Error adding data:", error);
+    return null;
+  }
+};
 
-// // 🔹 Fetch Data from MongoDB
-// export const fetchDataFromMongoDB = async () => {
-//   try {
-//     return await DataModel.find();
-//   } catch (error) {
-//     console.error("Error fetching data from MongoDB:", error);
-//     return [];
-//   }
-// };
+// Update Data
+export const updateDataInMongoDB = async (id, newData) => {
+  try {
+    const response = await axios.put(`${API_BASE_URL}/data/${id}`, newData);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating data:", error);
+    return null;
+  }
+};
 
-// // 🔹 Add Data to MongoDB
-// export const addDataToMongoDB = async (data) => {
-//   try {
-//     const newData = new DataModel(data);
-//     return await newData.save();
-//   } catch (error) {
-//     console.error("Error adding data to MongoDB:", error);
-//     return null;
-//   }
-// };
-
-// // 🔹 Update Data in MongoDB
-// export const updateDataInMongoDB = async (id, newData) => {
-//   try {
-//     return await DataModel.findByIdAndUpdate(id, newData, { new: true });
-//   } catch (error) {
-//     console.error("Error updating data in MongoDB:", error);
-//     return null;
-//   }
-// };
-
-// // 🔹 Delete Data from MongoDB
-// export const deleteDataFromMongoDB = async (id) => {
-//   try {
-//     return await DataModel.findByIdAndDelete(id);
-//   } catch (error) {
-//     console.error("Error deleting data from MongoDB:", error);
-//     return null;
-//   }
-// };
+// Delete Data
+export const deleteDataFromMongoDB = async (id) => {
+  try {
+    const response = await axios.delete(`${API_BASE_URL}/data/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting data:", error);
+    return null;
+  }
+};

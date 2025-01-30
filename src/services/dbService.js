@@ -6,12 +6,12 @@ import {
   deleteDataFromFirebase ,
   getUserByIdFromFirebase
 } from "./firebaseService";
-// import { 
-//   fetchDataFromMongoDB, 
-//   addDataToMongoDB, 
-//   updateDataInMongoDB, 
-//   deleteDataFromMongoDB 
-// } from "./mongoService";
+import { 
+  fetchDataFromMongoDB, 
+  addDataToMongoDB, 
+  updateDataInMongoDB, 
+  deleteDataFromMongoDB 
+} from "./mongoService";
 // import { 
 //   fetchDataFromMySQL, 
 //   addDataToMySQL, 
@@ -30,8 +30,8 @@ export const fetchData = async () => {
   switch (dbConfig.provider) {
     case "firebase":
       return await fetchDataFromFirebase();
-    // case "mongodb":
-    //   return await fetchDataFromMongoDB();
+    case "mongodb":
+      return await fetchDataFromMongoDB();
     // case "mysql":
     //   return await fetchDataFromMySQL();
     case "supabase":
@@ -46,8 +46,8 @@ export const addData = async (data) => {
   switch (dbConfig.provider) {
     case "firebase":
       return await addDataToFirebase(data);
-    // case "mongodb":
-    //   return await addDataToMongoDB(data);
+    case "mongodb":
+      return await addDataToMongoDB(data);
     // case "mysql":
     //   return await addDataToMySQL(data);
     case "supabase":
@@ -62,8 +62,8 @@ export const updateData = async (id, newData) => {
   switch (dbConfig.provider) {
     case "firebase":
       return await updateDataInFirebase(id, newData);
-    // case "mongodb":
-    //   return await updateDataInMongoDB(id, newData);
+    case "mongodb":
+      return await updateDataInMongoDB(id, newData);
     // case "mysql":
     //   return await updateDataInMySQL(id, newData);
     case "supabase":
@@ -78,8 +78,8 @@ export const deleteData = async (id) => {
   switch (dbConfig.provider) {
     case "firebase":
       return await deleteDataFromFirebase(id);
-    // case "mongodb":
-    //   return await deleteDataFromMongoDB(id);
+    case "mongodb":
+      return await deleteDataFromMongoDB(id);
     // case "mysql":
     //   return await deleteDataFromMySQL(id);
     case "supabase":
@@ -111,8 +111,8 @@ export const saveUserToDatabase = async (userData) => {
   switch (dbConfig.provider) {
     case "firebase":
       return await addUserDataToFirebase("users", userData);
-    // case "mongodb":
-    //   return await addDataToMongoDB("users", userData);
+    case "mongodb":
+      return await addDataToMongoDB("users", userData);
     // case "mysql":
     //   return await addDataToMySQL("users", userData);
     case "supabase":
