@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 
+// Import logo or add animated GIF path
+import logo from "../assets/logo.png"; // Update this with the actual path to your animated logo
+
 const ProtectedRoute = ({ children, requiredDashType }) => {
   const navigate = useNavigate();
   const auth = getAuth();
@@ -42,11 +45,22 @@ const ProtectedRoute = ({ children, requiredDashType }) => {
   }, [auth, db, navigate]);
 
   if (loading) {
-    return <div>Loading...</div>; // Show loading while fetching user data
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-100">
+        {/* Center the content with flexbox */}
+        <div className="text-center">
+          {/* Circular loading spinner with zoom-in animation */}
+          <div className="w-32 h-32 bg-blue-500 rounded-full flex items-center justify-center mx-auto animate-zoom-in">
+            <img src={logo} alt="Afro Digital Sales Logo" className="w-24 h-24 animate-spin" />
+          </div>
+          <p className="mt-4 text-lg font-semibold text-gray-700">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   if (!user || userDashType !== requiredDashType) {
-    // Redirect unauthorized users to their respective dashboards
+    // Redirect unauthorized users to their respective dashboards or custom routes based on dash_type
     const dashboardRoutes = {
       sales_dashboard: "/sales-dashboard",
       business_dashboard: "/business-dashboard",
@@ -54,11 +68,20 @@ const ProtectedRoute = ({ children, requiredDashType }) => {
       default: "/dashboard",
     };
 
+    // If there's a custom route for the user's dash_type, navigate accordingly
+    if (userDashType) {
+      const customRoute = `/custom/${userDashType}`;
+      navigate(customRoute, { replace: true });
+      return null;
+    }
+
+    // Default fallback
     navigate(dashboardRoutes[userDashType] || dashboardRoutes.default, { replace: true });
     return null;
   }
 
-  return <>{children}</>; // Render children if authorized
+  // Render children if authorized and dash_type matches
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;

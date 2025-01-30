@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import HomePage from "./pages/HomePage";
@@ -9,21 +9,63 @@ import SalesDashboard from "./pages/DashboardSales";
 import BusinessDashboard from "./pages/DashboardBusiness";
 import AdminDashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute"; // Import the role-based protected route
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 const App = () => {
-   // Log the auth and database provider values from .env
-   useEffect(() => {
+  const [userDashType, setUserDashType] = useState(null);
+
+  // Log the auth and database provider values from .env
+  useEffect(() => {
     const authProvider = import.meta.env.VITE_AUTH_PROVIDER;
     const dbProvider = import.meta.env.VITE_DB_PROVIDER;
 
     console.log("Auth Provider:", authProvider);
     console.log("Database Provider:", dbProvider);
+    
+    // Fetch user data and dash_type if the user is authenticated
+    const auth = getAuth();
+    const db = getFirestore();
+
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        const userRef = doc(db, "users", currentUser.uid);
+        const userSnap = await getDoc(userRef);
+        
+        if (userSnap.exists()) {
+          const userData = userSnap.data();
+          setUserDashType(userData.dash_type); // Set user's dash_type
+        }
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
+
+  // Redirect user based on their dash_type if user data exists
+  const getRedirectPath = () => {
+    if (userDashType) {
+      // Dynamically redirect based on dash_type
+      const dashboardRoutes = {
+        sales_dashboard: "/sales-dashboard",
+        business_dashboard: "/business-dashboard",
+        admin_dashboard: "/admin-dashboard",
+        default: "/dashboard",
+      };
+
+      return dashboardRoutes[userDashType] || dashboardRoutes.default;
+    }
+    return "/";
+  };
+
   return (
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route
+            path="/"
+            element={userDashType ? <Navigate to={getRedirectPath()} /> : <HomePage />}
+          />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
 
