@@ -4,6 +4,7 @@ import {
   signUpWithEmailAndPassword,
   signInWithGoogle,
   signInWithFacebook,
+  getUserFromLocalStorage
 } from "../services/authService";
 import { FaGoogle, FaFacebook, FaTelegram, FaInstagram } from "react-icons/fa";
 import { motion } from "framer-motion";
@@ -20,9 +21,24 @@ const SignUp = () => {
     e.preventDefault();
     try {
       const userData = await signUpWithEmailAndPassword(email, password, username, phoneNumber);
-      navigate("/dashboard"); // Redirect to dashboard after successful signup
+      const user = await getUserFromLocalStorage(); // Fetch user details
+            
+      redirectToDashboard(user.dash_type);
+      
     } catch (error) {
       setError(error.message || "Error signing up. Please try again.");
+    }
+  };
+  const redirectToDashboard = (dashType) => {
+    switch (dashType) {
+      case "sales_dashboard":
+        navigate("/sales-dashboard", { replace: true });
+        break;
+      case "business_dashboard": 
+        navigate("/business-dashboard", { replace: true });
+        break;
+      default:
+        navigate("/dashboard", { replace: true });
     }
   };
 

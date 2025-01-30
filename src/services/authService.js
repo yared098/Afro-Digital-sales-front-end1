@@ -14,10 +14,11 @@ const saveUserToLocalStorage = (userData) => {
 };
 
 // Helper function to get user from localStorage
-const getUserFromLocalStorage = () => {
+ export const getUserFromLocalStorage = () => {
   const user = localStorage.getItem("user");
   return user ? JSON.parse(user) : null;
 };
+
 // Sign up with email and password
 export const signUpWithEmailAndPassword = async (email, password, username, phoneNumber) => {
   try {
@@ -31,6 +32,8 @@ export const signUpWithEmailAndPassword = async (email, password, username, phon
       email: user.email,
       phoneNumber,
       provider: email,
+      dash_type:'business_dashboard',
+      
     };
 
     // Save user details in the database
@@ -52,13 +55,14 @@ export const signInWithEmailAndPassword = async (email, password) => {
     const user = userCredential.user;
     console.log("Authoservice ",user)
 
-    console.log("AuthService - Facebook User:", user);
+    console.log("AuthService - Facebook User:", user.uid);
 
     // Fetch user data from the database
     const userData = await fetchUserById(user.uid);
 
     // Save user data to localStorage
     saveUserToLocalStorage(userData);
+    console.log("successfully saved user data",userData)
     return userData; // Return fetched user data
   } catch (error) {
     console.error("Email/Password Sign-in Error:", error);
@@ -118,6 +122,8 @@ export const signInWithProvider = async (provider) => {
         email: user.email,
         provider: provider,
         createdAt: new Date().toISOString(),
+        dash_type:'business_dashboard',
+        
       };
 
       // Save new user to the selected database

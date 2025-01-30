@@ -14,7 +14,7 @@ import ShowChart from '../components/ShowChart';
 const Dashboard = () => {
   const { user, logout } = useAuth();
   const [users, setUsers] = useState([]);
-  console.log("Admin user info",users)
+  console.log("Admin user info",user)
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [chartType, setChartType] = useState('line');
@@ -137,7 +137,7 @@ const Dashboard = () => {
       <Sidebar
         menuItems={menuItems}
         onMenuClick={(section) => setActiveSection(section)}
-        DashboardName="Admin"
+        DashboardName="defoult dash"
       />
 
       <div className="flex-1 p-4">
