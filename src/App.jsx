@@ -1,90 +1,64 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider, useAuth } from "./context/AuthContext";
-import { dbConfig } from "./config/dbConfig"; // Import dbConfig
+import { AuthProvider } from "./context/AuthContext";
+import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
 import SalesDashboard from "./pages/DashboardSales";
 import BusinessDashboard from "./pages/DashboardBusiness";
-import HomePage from "./pages/HomePage";
-import GetStartedPage from "./pages/GetStartedPage";
-import "./App.css"; // Import Tailwind CSS
-
-// Standalone ProtectedRoute Component
-const ProtectedRoute = ({ element }) => {
-  const { user } = useAuth();
-
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
-
-  return element;
-};
-
-// Dashboard Redirect Logic
-const getDashboardRoute = (dashType) => {
-  switch (dashType) {
-    case "sales_dashboard":
-      return "/sales-dashboard";
-    case "business_dashboard":
-      return "/business-dashboard";
-    case "admin_dashboard":
-      return "/admin-dashboard";
-    default:
-      return "/dashboard";
-  }
-};
+import AdminDashboard from "./pages/Dashboard";
+import ProtectedRoute from "./components/ProtectedRoute"; // Import the role-based protected route
 
 const App = () => {
-  const { user } = useAuth();
-  const [initialized, setInitialized] = useState(false);
-
-  useEffect(() => {
-    // Initialize only once
-    setInitialized(true);
-  }, []);
-
-  if (!initialized) {
-    return <div>Loading...</div>; // Optional loading state
-  }
-
-  const redirectToDashboard = user ? getDashboardRoute(user.dash_type) : "/login";
-
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/getStarted" element={<GetStartedPage />} />
-        <Route path="/signup" element={<SignUp />} />
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
 
-        {/* Login Route with Redirection */}
-        <Route
-          path="/login"
-          element={!user ? <Login /> : <Navigate to={redirectToDashboard} replace />}
-        />
+          {/* Secure Dashboard Routes with Role-Based Access */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute requiredDashType="default">
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/sales-dashboard"
+            element={
+              <ProtectedRoute requiredDashType="sales_dashboard">
+                <SalesDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/business-dashboard"
+            element={
+              <ProtectedRoute requiredDashType="business_dashboard">
+                <BusinessDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin-dashboard"
+            element={
+              <ProtectedRoute requiredDashType="admin_dashboard">
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
 
-        {/* Default Dashboard Route */}
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute element={<Dashboard />} />
-          }
-        />
-
-        {/* Specific Dashboard Routes */}
-        <Route path="/sales-dashboard" element={<ProtectedRoute element={<SalesDashboard />} />} />
-        <Route path="/business-dashboard" element={<ProtectedRoute element={<BusinessDashboard />} />} />
-      </Routes>
-    </Router>
+          {/* Redirect unknown routes to home */}
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 };
 
-// Wrap with AuthProvider
-const AppWrapper = () => (
-  <AuthProvider>
-    <App />
-  </AuthProvider>
-);
-
-export default AppWrapper;
+export default App;
