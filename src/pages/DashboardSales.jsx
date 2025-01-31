@@ -6,6 +6,7 @@ import Sidebar from '../components/Sidebar';
 import SalesProduct from './SalesProduct';
 import SalesOrder from "./SalesOrder"
 import { useAuth } from "../context/AuthContext";
+import ProfilePage from './ProfilePage';
 
 
 const SalesDashboard = () => {
@@ -63,6 +64,8 @@ const SalesDashboard = () => {
         return <div>Notifications Content</div>;
       case 'orders':
         return <SalesOrder/>;
+      case 'profile':
+          return <ProfilePage/>;
       case 'sales':
         return <div>Sales profe Content</div>;
       case 'settings':

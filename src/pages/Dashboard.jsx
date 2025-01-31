@@ -8,6 +8,7 @@ import Sidebar from '../components/Sidebar';
 import DashboardCard from '../components/DashboardCard';
 import AdminSalesPage from "./AdminSalesPage";
 import OrdersList from "./OrderLIst";
+import ProfilePage from "./ProfilePage";
 import AdminBusinessPage from "./AdminBusinessPage";
 import ShowChart from '../components/ShowChart';
 
@@ -79,6 +80,7 @@ const Dashboard = () => {
     { name: 'Sales', link: 'sales', icon: FaChartLine },
     { name: 'Orders', link: 'orders', icon: FaClipboardList },
     { name: 'Settings', link: 'settings', icon: FaCog },
+    { name: 'Profile', link: 'profile', icon: FaUser, section: 'profile' },
     { name: 'Logout', link: 'logout', icon: FaSignOutAlt },
   ];
 
@@ -120,7 +122,8 @@ const Dashboard = () => {
      
       case 'business':
         return <AdminBusinessPage />
-
+      case 'profile':
+          return <ProfilePage/>;
       case 'orders':
           return <OrdersList />
       case 'sales':

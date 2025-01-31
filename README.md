@@ -8,10 +8,10 @@ AfroDigitalSales/
 │   ├── components/                   # Reusable components
 │   ├── config/                       # Configuration files (auth, database, etc.)
 │   ├── context/                      # React contexts for auth and state management
-│   ├── hooks/                        # Custom hooks (useAuth, useDB, etc.)
+│                        
 │   ├── pages/                        # Page components
 │   ├── services/                     # API and DB services (Firebase, MySQL, etc.)
-│   ├── utils/                        # Utility functions (helpers, etc.)
+│                      
 │   ├── App.jsx                       # Main application component
 │   ├── main.jsx                      # Entry point
 │   └── index.css                     # Tailwind CSS
