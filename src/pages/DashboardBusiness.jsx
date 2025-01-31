@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { FaBuilding, FaBell, FaClipboardList, FaBox, FaChartLine, FaCog, FaSignOutAlt } from 'react-icons/fa';
+import { FaBuilding, FaBell, FaClipboardList,FaUser, FaBox, FaChartLine, FaCog, FaSignOutAlt } from 'react-icons/fa';
 
 import Sidebar from '../components/Sidebar';
 import BusinessProducts from './BusinessProducts'; // Import BusinessProducts
 import BusinessOrder from "./BusinessOrder";
+import ProfilePage from "./ProfilePage"
+import AdminSalesPage from "./AdminSalesPage";
+import BusinessOverview from "./BusinessOverview";
 import { useAuth } from "../context/AuthContext";
 
 
@@ -26,8 +29,9 @@ const BusinessDashboard = () => {
     { name: 'Business Overview', link: 'overview', icon: FaBuilding },
     { name: 'Notifications', link: 'notifications', icon: FaBell },  // FaBell for notifications
     { name: 'Orders', link: 'orders', icon: FaClipboardList },       // FaClipboardList for orders
-    { name: 'Products', link: 'products', icon: FaBox },              // FaBox for products
+    { name: 'Your Store', link: 'products', icon: FaBox },              // FaBox for products
     { name: 'Sales', link: 'sales', icon: FaChartLine },              // FaChartLine for sales
+    { name: 'Profile', link: 'profile', icon: FaUser },              // FaChartLine for sales
     { name: 'Settings', link: 'settings', icon: FaCog },              // FaCog for settings
     { name: 'Logout', link: 'logout', icon: FaSignOutAlt },           // FaSignOutAlt for logout
   ];
@@ -38,13 +42,15 @@ const BusinessDashboard = () => {
       case 'products':
         return <BusinessProducts />; // Show Products section
       case 'overview':
-        return <div>Buisness overview</div>;
+        return <BusinessOverview/>;
       case 'notifications':
         return <div>Notifications Content</div>;
       case 'orders':
         return <BusinessOrder/>;
       case 'sales':
-        return <div>Sales Content</div>;
+        return <AdminSalesPage/>
+        case 'profile':
+          return <ProfilePage/>;
       case 'settings':
         return <div>Settings Content</div>;
       case "logout":

@@ -1,41 +1,61 @@
 import React, { useState } from 'react';
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus, FaTrash, FaEdit } from 'react-icons/fa';
 
 const BusinessProducts = () => {
   const [products, setProducts] = useState([
-    { id: 1, name: 'Product A', price: 100 ,discount:100},
-    { id: 2, name: 'Product B', price: 200 ,discount:100},
-    { id: 3, name: 'Product C', price: 300 ,discount:100},
-    { id: 4, name: 'Product D', price: 400,discount:100 },
+    { id: 1, name: 'Product A', price: 100, discount: 10, description: 'Description A', location: 'Location A' },
+    { id: 2, name: 'Product B', price: 200, discount: 20, description: 'Description B', location: 'Location B' },
+    { id: 3, name: 'Product C', price: 300, discount: 30, description: 'Description C', location: 'Location C' },
+    { id: 4, name: 'Product D', price: 400, discount: 40, description: 'Description D', location: 'Location D' },
   ]);
 
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [newProduct, setNewProduct] = useState({ 
-    name: '', 
-    price: '', 
-    description: '', 
-    discount: '', 
-    location: '' 
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [newProduct, setNewProduct] = useState({
+    name: '',
+    price: '',
+    description: '',
+    discount: '',
+    location: ''
   });
 
-  const [hasPermission, setHasPermission] = useState(true); // Simulating permission check
+  const handleProductClick = (product) => {
+    setSelectedProduct(product);
+    setNewProduct(product);
+    setIsFormOpen(true);
+  };
 
-  const addProduct = () => {
+  const addOrUpdateProduct = () => {
     if (newProduct.name && newProduct.price) {
-      const newProductData = {
-        id: products.length + 1,
-        name: newProduct.name,
-        price: parseFloat(newProduct.price),
-        description: newProduct.description || 'No description provided', // Default description
-        discount: newProduct.discount || 0, // Default discount
-        location: newProduct.location || 'Not specified', // Default location
-      };
-      setProducts([...products, newProductData]);
-      setNewProduct({ name: '', price: '', description: '', discount: '', location: '' }); // Reset the form
-      setIsFormOpen(false); // Close the form after submitting
+      if (selectedProduct) {
+        // Update existing product
+        setProducts(products.map((product) =>
+          product.id === selectedProduct.id ? { ...newProduct, id: selectedProduct.id } : product
+        ));
+      } else {
+        // Add new product
+        const newProductData = {
+          id: products.length + 1,
+          name: newProduct.name,
+          price: parseFloat(newProduct.price),
+          description: newProduct.description || 'No description provided',
+          discount: newProduct.discount || 0,
+          location: newProduct.location || 'Not specified',
+        };
+        setProducts([...products, newProductData]);
+      }
+      setIsFormOpen(false);
+      setSelectedProduct(null);
+      setNewProduct({ name: '', price: '', description: '', discount: '', location: '' }); // Reset form
     } else {
       alert('Please fill in all required fields');
     }
+  };
+
+  const deleteProduct = (productId) => {
+    setProducts(products.filter((product) => product.id !== productId));
+    setIsFormOpen(false);
+    setSelectedProduct(null);
   };
 
   return (
@@ -49,6 +69,7 @@ const BusinessProducts = () => {
             <div
               key={product.id}
               className="p-4 border border-gray-300 rounded-lg bg-white shadow-md flex flex-col items-center justify-center"
+              onClick={() => handleProductClick(product)}
             >
               <h3 className="text-md font-bold mb-2">{product.name}</h3>
               <p className="text-sm text-gray-600 mb-4">${product.price}</p>
@@ -63,7 +84,11 @@ const BusinessProducts = () => {
 
         {/* Floating Action Button */}
         <button
-          onClick={() => setIsFormOpen(true)}
+          onClick={() => {
+            setIsFormOpen(true);
+            setSelectedProduct(null);
+            setNewProduct({ name: '', price: '', description: '', discount: '', location: '' });
+          }}
           className="fixed bottom-6 right-6 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-700"
         >
           <FaPlus />
@@ -72,12 +97,12 @@ const BusinessProducts = () => {
 
       {/* Slide-In Form */}
       {isFormOpen && (
-        <div className="fixed top-0 right-0 w-96 max-h-screen bg-white shadow-lg p-6 z-10 transition-transform transform translate-x-0 overflow-y-auto rounded-lg">
-          <h3 className="text-xl font-bold mb-4">Add New Product</h3>
+        <div className="fixed top-0 right-0 w-96 bg-white shadow-lg p-6 z-10 transition-transform transform translate-x-0 overflow-y-auto rounded-lg">
+          <h3 className="text-xl font-bold mb-4">{selectedProduct ? 'Update Product' : 'Add New Product'}</h3>
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              addProduct();
+              addOrUpdateProduct();
             }}
             className="space-y-4"
           >
@@ -88,6 +113,7 @@ const BusinessProducts = () => {
                 value={newProduct.name}
                 onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
                 className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
               />
             </div>
             <div>
@@ -97,41 +123,36 @@ const BusinessProducts = () => {
                 value={newProduct.price}
                 onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
                 className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
               />
             </div>
-
-            {/* Conditional Fields for Permission */}
-            {hasPermission && (
-              <>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Description</label>
-                  <textarea
-                    value={newProduct.description}
-                    onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-                    className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    rows="0"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Discount (%)</label>
-                  <input
-                    type="number"
-                    value={newProduct.discount}
-                    onChange={(e) => setNewProduct({ ...newProduct, discount: e.target.value })}
-                    className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Location</label>
-                  <input
-                    type="text"
-                    value={newProduct.location}
-                    onChange={(e) => setNewProduct({ ...newProduct, location: e.target.value })}
-                    className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-              </>
-            )}
+            <div>
+              <label className="block text-sm font-medium mb-2">Description</label>
+              <textarea
+                value={newProduct.description}
+                onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                rows="3"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">Discount (%)</label>
+              <input
+                type="number"
+                value={newProduct.discount}
+                onChange={(e) => setNewProduct({ ...newProduct, discount: e.target.value })}
+                className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">Location</label>
+              <input
+                type="text"
+                value={newProduct.location}
+                onChange={(e) => setNewProduct({ ...newProduct, location: e.target.value })}
+                className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
             <div className="flex justify-end space-x-4">
               <button
@@ -145,10 +166,22 @@ const BusinessProducts = () => {
                 type="submit"
                 className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
               >
-                Add Product
+                {selectedProduct ? 'Update Product' : 'Add Product'}
               </button>
             </div>
           </form>
+
+          {/* Delete Button */}
+          {selectedProduct && (
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={() => deleteProduct(selectedProduct.id)}
+                className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition"
+              >
+                <FaTrash /> Delete Product
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

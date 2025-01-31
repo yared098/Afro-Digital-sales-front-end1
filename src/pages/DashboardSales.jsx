@@ -64,7 +64,7 @@ const SalesDashboard = () => {
       case 'orders':
         return <SalesOrder/>;
       case 'sales':
-        return <div>Sales Content</div>;
+        return <div>Sales profe Content</div>;
       case 'settings':
         return <div>Settings Content</div>;
       case "logout":

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import '../chartConfig';
-import { FaHome, FaUser, FaCog, FaSignOutAlt, FaBuilding, FaChartLine, FaShoppingCart, FaStore, FaTags } from 'react-icons/fa';
+import { FaHome, FaUser, FaCog, FaSignOutAlt,FaClipboardList, FaBuilding, FaChartLine, FaShoppingCart, FaStore, FaTags } from 'react-icons/fa';
 import { useAuth } from "../context/AuthContext";
 import { fetchData } from "../services/dbService"; // Import Firebase service
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import DashboardCard from '../components/DashboardCard';
 import AdminSalesPage from "./AdminSalesPage";
+import OrdersList from "./OrderLIst";
 import AdminBusinessPage from "./AdminBusinessPage";
 import ShowChart from '../components/ShowChart';
 
@@ -74,9 +75,9 @@ const Dashboard = () => {
 
   const menuItems = [
     { name: 'Overview', link: 'overview', icon: FaHome },
-    { name: 'Profile', link: 'profile', icon: FaUser },
     { name: 'Business', link: 'business', icon: FaBuilding },
     { name: 'Sales', link: 'sales', icon: FaChartLine },
+    { name: 'Orders', link: 'orders', icon: FaClipboardList },
     { name: 'Settings', link: 'settings', icon: FaCog },
     { name: 'Logout', link: 'logout', icon: FaSignOutAlt },
   ];
@@ -116,10 +117,12 @@ const Dashboard = () => {
             </div>
           </div>
         );
-      case 'profile':
-        return <h2>Profile Section</h2>;
+     
       case 'business':
         return <AdminBusinessPage />
+
+      case 'orders':
+          return <OrdersList />
       case 'sales':
         return <AdminSalesPage />
       case 'settings':
