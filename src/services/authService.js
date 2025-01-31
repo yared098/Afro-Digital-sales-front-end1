@@ -1,7 +1,7 @@
 
 
 import { auth, googleProvider, facebookProvider } from "../config/firebaseConfig";
-import { supabase } from "../config/supabaseConfig"; // Supabase client
+import { supabaseConfig } from "../config/supabaseConfig"; // Supabase client
 import { signInWithPopup, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword as firebaseSignInWithEmail } from "firebase/auth";
 import axios from "axios"; // For API calls
 import { authConfig } from '../config/authConfig'; // Import the authConfig object
@@ -132,7 +132,7 @@ if (authProvider === "firebase") {
 else if (authProvider === "supabase") {
   signUpWithEmailAndPassword = async (email, password, username, phoneNumber, dashType) => {
     try {
-      const { user, error } = await supabase.auth.signUp({ email, password });
+      const { user, error } = await supabaseConfig.auth.signUp({ email, password });
 
       if (error) throw error;
 
@@ -157,7 +157,7 @@ else if (authProvider === "supabase") {
 
   signInWithEmailAndPassword = async (email, password) => {
     try {
-      const { user, error } = await supabase.auth.signInWithPassword({ email, password });
+      const { user, error } = await supabaseConfig.auth.signInWithPassword({ email, password });
 
       if (error) throw error;
 
@@ -191,7 +191,7 @@ else if (authProvider === "supabase") {
 
   signInWithProvider = async (provider) => {
     try {
-      const { user, error } = await supabase.auth.signInWithOAuth({ provider });
+      const { user, error } = await supabaseConfig.auth.signInWithOAuth({ provider });
 
       if (error) throw error;
 
@@ -214,7 +214,7 @@ else if (authProvider === "supabase") {
 
   logout = async () => {
     try {
-      await supabase.auth.signOut();
+      await supabaseConfig.auth.signOut();
       localStorage.removeItem("user");
     } catch (error) {
       console.error("Supabase Logout Error:", error);

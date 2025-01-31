@@ -1,21 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { FaFilter } from "react-icons/fa";
+import { services } from "../services/ServiceFactory";
 
 const OrdersList = ({ filterLocation, filterName, filterPrice }) => {
-  const mockOrders = [
-    { id: 1, code: "ORD123", name: "Product A", location: "Addis Ababa", price: 100, status: "Accepted", timeAgo: "2 hours ago", address: "123 New York St" },
-    { id: 2, code: "ORD124", name: "Product B", location: "BAhir Dar", price: 200, status: "Rejected", timeAgo: "5 hours ago", address: "456 LA Ave" },
-    { id: 3, code: "ORD125", name: "Product C", location: "Gonder", price: 150, status: "Pending", timeAgo: "1 day ago", address: "789 Chicago Blvd" },
-    { id: 1, code: "ORD123", name: "Product A", location: "Adama", price: 100, status: "Accepted", timeAgo: "2 hours ago", address: "123 New York St" },
-    { id: 2, code: "ORD124", name: "Product B", location: "Hawasa", price: 200, status: "Rejected", timeAgo: "5 hours ago", address: "456 LA Ave" },
-    { id: 3, code: "ORD125", name: "Product C", location: "Sidama", price: 150, status: "Pending", timeAgo: "1 day ago", address: "789 Chicago Blvd" },
-    { id: 1, code: "ORD123", name: "Product A", location: "Arba minch", price: 100, status: "Accepted", timeAgo: "2 hours ago", address: "123 New York St" },
-    { id: 2, code: "ORD124", name: "Product B", location: "Los Angeles", price: 200, status: "Rejected", timeAgo: "5 hours ago", address: "456 LA Ave" },
-    { id: 3, code: "ORD125", name: "Product C", location: "Chicago", price: 150, status: "Pending", timeAgo: "1 day ago", address: "789 Chicago Blvd" }
-  ];
-
-  const [orders, setOrders] = useState(mockOrders);
+  const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState("All");
@@ -25,18 +13,14 @@ const OrdersList = ({ filterLocation, filterName, filterPrice }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const itemsPerPage = 5;
-  const db = getFirestore();
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const ordersSnap = await getDocs(collection(db, "orders"));
-        if (!ordersSnap.empty) {
-          const ordersList = ordersSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          setOrders(ordersList);
-        }
+        const ordersList = await services.order.getAllOrders();
+        setOrders(ordersList);
       } catch (error) {
-        console.error("Error fetching orders from Firebase:", error);
+        console.error("Error fetching orders:", error);
       }
     };
 
@@ -68,10 +52,9 @@ const OrdersList = ({ filterLocation, filterName, filterPrice }) => {
 
   return (
     <div className="flex h-screen bg-gray-100">
-      {/* Orders List */}
       <div className="w-2/3 p-4">
         <h2 className="text-xl font-semibold mb-3">Orders</h2>
-
+        
         {/* Tabs */}
         <div className="flex mb-3 space-x-2">
           {["All", "Accepted", "Rejected", "Pending"].map((tab) => (
@@ -98,24 +81,6 @@ const OrdersList = ({ filterLocation, filterName, filterPrice }) => {
             <FaFilter className="text-gray-600" />
           </button>
         </div>
-
-        {/* Filter Modal */}
-        {filterMenuOpen && (
-          <div className="absolute top-20 right-10 bg-white shadow-lg rounded-lg p-4 w-48">
-            <p className="font-semibold text-sm">Filter By:</p>
-            <select className="w-full mt-2 p-2 border rounded-lg text-sm" onChange={(e) => setSelectedStatus(e.target.value)}>
-              <option value="">Status</option>
-              <option value="Accepted">Accepted</option>
-              <option value="Rejected">Rejected</option>
-              <option value="Pending">Pending</option>
-            </select>
-            <select className="w-full mt-2 p-2 border rounded-lg text-sm" onChange={(e) => setSortBy(e.target.value)}>
-              <option value="">Sort By</option>
-              <option value="Name">Name</option>
-              <option value="Time">Time</option>
-            </select>
-          </div>
-        )}
 
         {/* Orders List */}
         <div className="overflow-auto h-[70%]">

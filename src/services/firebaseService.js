@@ -92,4 +92,34 @@ export const deleteDataFromFirebase = async (collectionName, id) => {
   }
 };
 
+
+export class FirebaseDBService {
+  async read(collectionName, docId = null) {
+    if (docId) {
+      const docRef = doc(db, collectionName, docId);
+      const docSnap = await getDoc(docRef);
+      return docSnap.exists() ? docSnap.data() : null;
+    }
+    
+    const querySnapshot = await getDocs(collection(db, collectionName));
+    return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  }
+
+  async create(collectionName, data) {
+    const newDocRef = doc(collection(db, collectionName));
+    await setDoc(newDocRef, data);
+    return newDocRef.id;
+  }
+
+  async update(collectionName, docId, newData) {
+    const docRef = doc(db, collectionName, docId);
+    return updateDoc(docRef, newData);
+  }
+
+  async delete(collectionName, docId) {
+    const docRef = doc(db, collectionName, docId);
+    return deleteDoc(docRef);
+  }
+}
+
 export { auth, db };

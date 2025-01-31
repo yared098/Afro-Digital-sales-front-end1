@@ -21,3 +21,18 @@ AfroDigitalSales/
 └── package.json                      # Project dependencies
 └── .env                              # Environment variables (API keys, DB config)
 # Afro-Digital-sales-front-end1
+
+
+new service folder file structrure 
+📂 services/
+ ├── 📂 dbProviders/       # Database-specific services
+ │   ├── FirebaseDBService.js
+ │   ├── MySQLDBService.js
+ │   ├── SupabaseDBService.js
+ │   ├── APIDBService.js
+ ├── dbFactory.js          # Selects the correct DB provider
+ ├── BaseDBService.js      # Generic CRUD functions
+ ├── ServiceFactory.js     # Exports all services
+ ├── 📂 operations/
+ │   ├── ProductService.js  # Product CRUD service
+📂 config/

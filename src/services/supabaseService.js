@@ -83,4 +83,31 @@ export const deleteDataFromSupabase = async (tableName, id) => {
   }
 };
 
+export class SupabaseDBService {
+  async read(table, id = null) {
+    const { data, error } = id
+      ? await supabase.from(table).select("*").eq("id", id).single()
+      : await supabase.from(table).select("*");
+    if (error) throw error;
+    return data;
+  }
+
+  async create(table, data) {
+    const { data: insertedData, error } = await supabase.from(table).insert([data]);
+    if (error) throw error;
+    return insertedData;
+  }
+
+  async update(table, id, newData) {
+    const { data, error } = await supabase.from(table).update(newData).eq("id", id);
+    if (error) throw error;
+    return data;
+  }
+
+  async delete(table, id) {
+    const { error } = await supabase.from(table).delete().eq("id", id);
+    if (error) throw error;
+  }
+}
+
 export { supabase };
