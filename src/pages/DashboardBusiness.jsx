@@ -74,8 +74,6 @@ const BusinessDashboard = () => {
 
   const menuItems = [
     { name: 'Overview', link: 'overview', icon: FaHome },
-    { name: 'Business Overview', link: 'overview', icon: FaBuilding },
-    { name: 'Notifications', link: 'notifications', icon: FaBell },  // FaBell for notifications
     { name: 'Orders', link: 'orders', icon: FaClipboardList },       // FaClipboardList for orders
     { name: 'Your Store', link: 'products', icon: FaBox },              // FaBox for products
     { name: 'Sales', link: 'sales', icon: FaChartLine },              // FaChartLine for sales
@@ -125,11 +123,11 @@ const BusinessDashboard = () => {
         return <BusinessOverview />;
       case "notifications":
         return (
-          <div className="bg-white p-4 rounded shadow">
-            <h2 className="text-lg font-semibold mb-2">Notifications</h2>
+          <div className="p-4 bg-white rounded shadow">
+            <h2 className="mb-2 text-lg font-semibold">Notifications</h2>
             <ul>
               {notifications.map((note, index) => (
-                <li key={index} className="border-b py-2">{note}</li>
+                <li key={index} className="py-2 border-b">{note}</li>
               ))}
             </ul>
           </div>
@@ -163,23 +161,23 @@ const BusinessDashboard = () => {
             {/* Notifications */}
             <div className="relative">
               <FaBell
-                className="text-white text-2xl cursor-pointer hover:text-yellow-400"
+                className="text-2xl text-white cursor-pointer hover:text-yellow-400"
                 onClick={() => setShowNotifications(!showNotifications)}
               />
               {counts.notifications > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-2">
+                <span className="absolute px-2 text-xs text-white bg-red-500 rounded-full -top-2 -right-2">
                   {counts.notifications}
                 </span>
               )}
               {showNotifications && (
-                <div className="absolute right-0 mt-2 w-48 bg-white text-black shadow-lg rounded-lg p-2 z-10">
+                <div className="absolute right-0 z-10 w-48 p-2 mt-2 text-black bg-white rounded-lg shadow-lg">
                   <button
-                    className="absolute top-2 right-2 text-sm text-gray-500"
+                    className="absolute text-sm text-gray-500 top-2 right-2"
                     onClick={() => setShowNotifications(false)}
                   >
                     <FaSignOutAlt size={12} />
                   </button>
-                  <h3 className="font-semibold border-b pb-2">Notifications</h3>
+                  <h3 className="pb-2 font-semibold border-b">Notifications</h3>
                   <ul>
                     {notifications.map((note, index) => (
                       <li key={index} className="py-1 border-b last:border-b-0">{note}</li>
@@ -192,11 +190,11 @@ const BusinessDashboard = () => {
             {/* Sales */}
             <div className="relative">
               <FaShoppingCart
-                className="text-white text-2xl cursor-pointer hover:text-green-400"
+                className="text-2xl text-white cursor-pointer hover:text-green-400"
                 onClick={() => handleSectionChange('orders')}
               />
               {counts.sales > 0 && (
-                <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs rounded-full px-2">
+                <span className="absolute px-2 text-xs text-white bg-green-500 rounded-full -top-2 -right-2">
                   {counts.sales}
                 </span>
               )}
@@ -205,11 +203,11 @@ const BusinessDashboard = () => {
             {/* Orders */}
             <div className="relative">
               <FaBox
-                className="text-white text-2xl cursor-pointer hover:text-blue-400"
+                className="text-2xl text-white cursor-pointer hover:text-blue-400"
                 onClick={() => handleSectionChange('orders')}
               />
               {counts.orders > 0 && (
-                <span className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs rounded-full px-2">
+                <span className="absolute px-2 text-xs text-white bg-blue-500 rounded-full -top-2 -right-2">
                   {counts.orders}
                 </span>
               )}

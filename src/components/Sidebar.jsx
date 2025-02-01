@@ -25,10 +25,10 @@ const Sidebar = ({ menuItems, onMenuClick, DashboardName }) => {
         </button>
       </div>
 
-      {/* Sidebar Menu */}
-      <nav className="flex-1 mt-4">
+       {/* Sidebar Menu */}
+       <nav className="flex-1 mt-4">
         <ul className="space-y-2">
-          {menuItems.map((item, index) => (
+          {menuItems.slice(0, -1).map((item, index) => (
             <li key={index} className="relative">
               <button
                 onClick={() => handleMenuClick(item.link, index)}
@@ -45,15 +45,17 @@ const Sidebar = ({ menuItems, onMenuClick, DashboardName }) => {
       </nav>
 
       {/* Logout Button */}
-      <div className="px-5 pb-4 mt-auto">
+      <div className="">
         <button
-          className="flex items-center w-full gap-4 px-4 py-3 text-lg transition-all bg-red-500 rounded-lg shadow-md hover:bg-red-600"
-          onClick={() => onMenuClick('/logout')}
+          onClick={() => handleMenuClick(menuItems[menuItems.length - 1].link, menuItems.length - 1)}
+          className={`flex items-center gap-4 px-5 py-3 w-full text-left text-lg rounded-lg transition-all duration-300 
+            bg-red-500 hover:bg-red-700 shadow-md text-white ${isCollapsed ? 'justify-center' : ''}`}
         >
           <FaSignOutAlt size={22} />
           <span className={`${isCollapsed ? 'hidden' : 'block'}`}>Logout</span>
         </button>
       </div>
+      
     </div>
   );
 };
