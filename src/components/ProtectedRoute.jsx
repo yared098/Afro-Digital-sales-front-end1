@@ -46,12 +46,12 @@ const ProtectedRoute = ({ children, requiredDashType }) => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen bg-gray-100">
+      <div className="flex items-center justify-center h-screen bg-gray-100">
         {/* Center the content with flexbox */}
         <div className="text-center">
           {/* Circular loading spinner with zoom-in animation */}
-          <div className="w-32 h-32 bg-blue-500 rounded-full flex items-center justify-center mx-auto animate-zoom-in">
-            <img src={logo} alt="Afro Digital Sales Logo" className="w-24 h-24 animate-spin" />
+          <div className="flex items-center justify-center w-32 h-32 mx-auto bg-green-500 rounded-full animate-zoom-in">
+            <img src={logo} alt="Afro Digital Sales Logo" className="w-24 h-24 rounded-full animate-spin" />
           </div>
           <p className="mt-4 text-lg font-semibold text-gray-700">Loading...</p>
         </div>

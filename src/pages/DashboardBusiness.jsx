@@ -33,7 +33,6 @@ const BusinessDashboard = () => {
     { name: 'Sales', link: 'sales', icon: FaChartLine },              // FaChartLine for sales
     { name: 'Profile', link: 'profile', icon: FaUser },              // FaChartLine for sales
     { name: 'Settings', link: 'settings', icon: FaCog },              // FaCog for settings
-    { name: 'Logout', link: 'logout', icon: FaSignOutAlt },           // FaSignOutAlt for logout
   ];
   
 
@@ -70,7 +69,7 @@ const BusinessDashboard = () => {
         DashboardName={"Business Dash"}
       />
       <div className="flex-1 p-4">
-        <nav className="flex items-center justify-between p-4 bg-gray-800">
+        <nav className="flex items-center justify-between p-4 bg-green-500 rounded-lg">
           <h1 className="text-xl text-white">Business Dashboard</h1>
           <button onClick={handleLogout} className="px-4 py-2 text-white bg-yellow-500 rounded hover:bg-red-600">
             Log Out
