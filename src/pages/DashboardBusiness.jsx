@@ -71,7 +71,6 @@ const BusinessDashboard = () => {
     { name: 'Profile', link: 'profile', icon: FaUser },              // FaChartLine for sales
     { name: 'Settings', link: 'settings', icon: FaCog },              // FaCog for settings
     { name: 'Logout', link: 'logout', icon: FaSignOutAlt },           // FaSignOutAlt for logout
-
   ];
 
   const renderContent = () => {
@@ -146,71 +145,11 @@ const BusinessDashboard = () => {
 
       {/* Main Content */}
       <div className="flex-1 p-4">
-        {/* Top Navbar */}
-        <nav className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg shadow-lg">
-          <h1 className="text-xl text-white font-semibold">Business Dashboard</h1>
-
-          {/* Right-aligned circular icons */}
-          <div className="flex space-x-4">
-            {/* Notifications */}
-            <div className="relative">
-              <FaBell
-                className="text-white text-2xl cursor-pointer hover:text-yellow-400"
-                onClick={() => setShowNotifications(!showNotifications)}
-              />
-              {counts.notifications > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-2">
-                  {counts.notifications}
-                </span>
-              )}
-              {showNotifications && (
-                <div className="absolute right-0 mt-2 w-48 bg-white text-black shadow-lg rounded-lg p-2 z-10">
-                  <button
-                    className="absolute top-2 right-2 text-sm text-gray-500"
-                    onClick={() => setShowNotifications(false)}
-                  >
-                    <FaSignOutAlt size={12} />
-                  </button>
-                  <h3 className="font-semibold border-b pb-2">Notifications</h3>
-                  <ul>
-                    {notifications.map((note, index) => (
-                      <li key={index} className="py-1 border-b last:border-b-0">{note}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-
-            {/* Orders */}
-            <div className="relative">
-              <FaClipboardList className="text-white text-2xl cursor-pointer hover:text-yellow-400" />
-              {counts.orders > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-2">
-                  {counts.orders}
-                </span>
-              )}
-            </div>
-
-            {/* Products */}
-            <div className="relative">
-              <FaBox className="text-white text-2xl cursor-pointer hover:text-yellow-400" />
-              {counts.products > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-2">
-                  {counts.products}
-                </span>
-              )}
-            </div>
-
-            {/* Bids */}
-            <div className="relative">
-              <FaGavel className="text-white text-2xl cursor-pointer hover:text-yellow-400" />
-              {counts.bids > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-2">
-                  {counts.bids}
-                </span>
-              )}
-            </div>
-          </div>
+        <nav className="flex items-center justify-between p-4 bg-gray-800">
+          <h1 className="text-xl text-white">Business Dashboard</h1>
+          <button onClick={handleLogout} className="px-4 py-2 text-white bg-yellow-500 rounded hover:bg-red-600">
+            Log Out
+          </button>
         </nav>
 
         {/* Page Content */}
