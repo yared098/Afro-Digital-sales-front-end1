@@ -143,7 +143,7 @@ const Dashboard = () => {
       <Sidebar
         menuItems={menuItems}
         onMenuClick={(section) => setActiveSection(section)}
-        DashboardName="defoult dash"
+        DashboardName="Default Dash"
       />
 
       <div className="flex-1 p-4">

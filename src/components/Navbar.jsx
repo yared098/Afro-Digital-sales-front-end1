@@ -47,26 +47,32 @@ const Navbar = () => {
 
           {/* Dropdown Menu */}
           {isDropdownOpen && (
-            <div className="absolute right-0 mt-2 p-2 space-y-2 bg-[#00002E] rounded-md shadow-lg z-50">
+            <div className="absolute right-2 top-12 p-5 bg-green-500 rounded-md shadow-xl z-50 
+                             before:content-[''] before:absolute before:-top-3 before:left-1/2 
+                            before:-translate-x-1/2 before:border-8 before:border-transparent 
+                            before:border-b-green-500">
               <button
                 onClick={() => handleDropdownSelection('sales_dashboard')}
-                className="block text-lg text-white font-semibold transition-all duration-300 hover:text-indigo-400"
+                className="block w-full px-4 py-2 text-lg font-semibold text-white transition-all duration-300 border-b-4 border-transparent shadow-md hover:border-white hover:bg-green-600"
               >
                 Sales
               </button>
               <button
                 onClick={() => handleDropdownSelection('business_dashboard')}
-                className="block text-lg text-white font-semibold transition-all duration-300 hover:text-indigo-400"
+                className="block w-full px-4 py-2 mt-2 text-lg font-semibold text-white transition-all duration-300 border-b-4 border-transparent shadow-md hover:border-white hover:bg-green-600"
               >
                 Business
               </button>
               <button
                 onClick={() => handleDropdownSelection('other_dashboard')}
-                className="block text-lg text-white font-semibold transition-all duration-300 hover:text-indigo-400"
+                className="block w-full px-4 py-2 mt-2 text-lg font-semibold text-white transition-all duration-300 border-b-4 border-transparent shadow-md hover:border-white hover:bg-green-600"
               >
                 Other
               </button>
             </div>
+          )}
+
+
           )}
         </div>
 

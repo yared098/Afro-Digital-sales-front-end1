@@ -9,7 +9,6 @@ const dbServiceFactory = () => {
       return new FirebaseService();
     case 'mysql':
       return new MySQLService();
-  
     case 'supabase':
       return new SupabaseService();
     default:
