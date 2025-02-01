@@ -5,7 +5,7 @@ import { supabaseConfig } from "../config/supabaseConfig"; // Supabase client
 import { signInWithPopup, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword as firebaseSignInWithEmail } from "firebase/auth";
 import axios from "axios"; // For API calls
 import { authConfig } from '../config/authConfig'; // Import the authConfig object
-import { addUserDataToFirebase } from "./firebaseService";
+import { addUserDataToFirebase,getUserByIdFromFirebase } from "./firebaseService";
 
 const authProvider = authConfig.provider; // Access the provider from authConfig
 
@@ -61,7 +61,7 @@ if (authProvider === "firebase") {
         provider: 'email'
       };
 
-      await saveUserToDatabase(userData);
+      await addUserDataToFirebase("users",userData);
       saveUserToLocalStorage(userData);
 
       return userData;
@@ -100,7 +100,7 @@ if (authProvider === "firebase") {
       const result = await signInWithPopup(auth, selectedProvider);
       const user = result.user;
 
-      let userData = await fetchUserById(user.uid);
+      let userData = await getUserByIdFromFirebase(user.uid);
       if (!userData) {
         userData = {
           uid: user.uid,
@@ -108,7 +108,7 @@ if (authProvider === "firebase") {
           provider: provider,
           dash_type: 'business_dashboard',
         };
-        await saveUserToDatabase(userData); // Save new user
+        await addUserDataToFirebase("users",userData); // Save new user
       }
 
       saveUserToLocalStorage(userData);
@@ -146,7 +146,7 @@ else if (authProvider === "supabase") {
         dash_type: dashType,
       };
 
-      await saveUserToDatabase(userData); // Save user to Supabase/MySQL
+      await addUserDataToFirebase("users",userData); // Save user to Supabase/MySQL
       saveUserToLocalStorage(userData);
 
       return userData;
@@ -168,7 +168,7 @@ else if (authProvider === "supabase") {
         provider: 'email',
       };
 
-      await saveUserToDatabase(userData);
+      await addUserDataToFirebase("users",userData);
       saveUserToLocalStorage(userData);
 
       return userData;
@@ -203,7 +203,7 @@ else if (authProvider === "supabase") {
         dash_type: 'business_dashboard',
       };
 
-      await saveUserToDatabase(userData); // Save new user
+      await addUserDataToFirebase("users",userData); // Save new user
       saveUserToLocalStorage(userData);
 
       return userData;
@@ -240,7 +240,7 @@ else if (authProvider === "api") {
       const userData = response.data.user;
 
       saveUserToLocalStorage(userData);
-      await saveUserToDatabase(userData); // Save user to your database (MySQL or MongoDB)
+      await addUserDataToFirebase("users",userData); // Save user to your database (MySQL or MongoDB)
 
       return userData;
     } catch (error) {
@@ -256,7 +256,7 @@ else if (authProvider === "api") {
       const userData = response.data.user;
 
       saveUserToLocalStorage(userData);
-      await saveUserToDatabase(userData); // Save user to your database (MySQL or MongoDB)
+      await addUserDataToFirebase("users",userData); // Save user to your database (MySQL or MongoDB)
 
       return userData;
     } catch (error) {
@@ -283,7 +283,7 @@ else if (authProvider === "api") {
       const userData = response.data.user;
 
       saveUserToLocalStorage(userData);
-      await saveUserToDatabase(userData); // Save new user to your database (MySQL or MongoDB)
+      await addUserDataToFirebase("users",userData); // Save new user to your database (MySQL or MongoDB)
 
       return userData;
     } catch (error) {
