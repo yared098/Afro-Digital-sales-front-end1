@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { services } from "../services/ServiceFactory";
+import { FaSyncAlt } from "react-icons/fa";
 
 const BusinessSalesPage = () => {
   const [sales, setSales] = useState([]);
@@ -14,22 +15,14 @@ const BusinessSalesPage = () => {
     fetchProducts();
   }, []);
 
-    const fetchProducts = async () => {
-        try {
-        const productList = await services.product.getAllProducts();
-        setProducts(productList);
-        } catch (error) {
-        console.error("Error fetching product:", error);
-        }
-    };
-    
-    // const products = selectedSale
-    // ? products.filter(
-    //     (product) =>
-    //       product.salesId === selectedSale.id && product.vendorId === selectedSale.vendorId
-    //   )
-    // : [];
-
+  const fetchProducts = async () => {
+    try {
+      const productList = await services.product.getAllProducts();
+      setProducts(productList);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
 
   const fetchSales = async () => {
     setLoading(true);
@@ -57,18 +50,13 @@ const BusinessSalesPage = () => {
 
   return (
     <div className="relative min-h-screen bg-gray-100">
-      <div className="p-6 mx-auto bg-white rounded-lg shadow-md">
-        <h2 className="mb-4 text-2xl font-semibold text-gray-800">Business Sales</h2>
-
-        <button
-          onClick={fetchSales}
-          className="px-4 py-2 mb-4 text-white transition bg-blue-600 rounded-md shadow hover:bg-blue-700"
-        >
-          Refresh Sales
-        </button>
+      <div className="p-6 mx-auto bg-white rounded-lg shadow-md mb-8">
+        {/* <h2 className="mb-4 text-2xl font-semibold text-gray-800">Business Sales</h2> */}
 
         {loading ? (
-          <p className="text-gray-600">Loading sales...</p>
+          <div className="flex justify-center items-center py-6">
+            <p className="text-gray-600">Loading sales...</p>
+          </div>
         ) : error ? (
           <p className="text-red-500">{error}</p>
         ) : sales.length === 0 ? (
@@ -101,6 +89,14 @@ const BusinessSalesPage = () => {
         )}
       </div>
 
+      {/* Floating Action Button */}
+      <button
+        onClick={fetchSales}
+        className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg transition transform hover:scale-110"
+      >
+        <FaSyncAlt size={24} />
+      </button>
+
       {/* Sidebar for Sale Details */}
       <div
         className={`fixed overflow-scroll top-0 right-0 h-full w-96 bg-white shadow-2xl shadow-black p-6 transform transition-transform duration-300 
@@ -131,36 +127,30 @@ const BusinessSalesPage = () => {
               <p className="text-gray-600">{selectedSale.phone}</p>
             </div>
 
-            <hr/>
+            <hr className="my-4"/>
 
-            {/* sales recent product section */}
-
-            {/* Sales Recent Product Section */}
-            <h3 className="mb-2 text-lg font-semibold text-gray-800">Recent Sales</h3>
+            {/* Recent Products Section */}
+            <h3 className="mb-2 text-lg font-semibold text-gray-800">Recent Products</h3>
             {products.length === 0 ? (
-            <p className="text-gray-600">No recent sales found.</p>
+              <p className="text-gray-600">No recent products found.</p>
             ) : (
-            <ul className="space-y-4">
+              <ul className="space-y-4">
                 {products.map((product) => (
-                <li key={product.id} className="flex items-center h-24 p-3 bg-green-200 rounded-md shadow">
-                    {/* Image Section */}
+                  <li key={product.id} className="flex items-center h-24 p-3 bg-green-200 rounded-md shadow">
                     <img
-                    src={product.p_image || "https://via.placeholder.com/100"}
-                    alt="Product"
-                    className="object-cover w-16 h-16 rounded-full" // Small circle
+                      src={product.p_image || "https://via.placeholder.com/100"}
+                      alt="Product"
+                      className="object-cover w-16 h-16 rounded-full"
                     />
-                    
-                    {/* Info Section */}
                     <div className="ml-4">
-                    <p className="font-semibold text-gray-800">{product.p_name}</p>
-                    <p className="text-sm text-gray-600">Quantity: {product.quantity}</p>
-                    <p className="text-xs text-gray-500">6 hours ago</p>
+                      <p className="font-semibold text-gray-800">{product.p_name}</p>
+                      <p className="text-sm text-gray-600">Quantity: {product.quantity}</p>
+                      <p className="text-xs text-gray-500">6 hours ago</p>
                     </div>
-                </li>
+                  </li>
                 ))}
-            </ul>
+              </ul>
             )}
-
           </>
         )}
       </div>
