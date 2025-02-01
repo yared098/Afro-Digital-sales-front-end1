@@ -29,7 +29,7 @@ export const getUserByIdFromFirebase = async (userId) => {
 export const addUserDataToFirebase = async (collectionName, data) => {
   try {
     // Use doc() to specify a custom ID (e.g., data.uid)
-    const docRef = doc(db, 'users', data.uid); 
+    const docRef = doc(db, collectionName, data.uid); 
     await setDoc(docRef, data); // Use setDoc() to add data with the custom ID
 
     return { id: docRef.id, ...data };
@@ -91,6 +91,7 @@ export const deleteDataFromFirebase = async (collectionName, id) => {
     return false;
   }
 };
+
 
 
 export class FirebaseDBService {

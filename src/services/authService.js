@@ -5,6 +5,7 @@ import { supabaseConfig } from "../config/supabaseConfig"; // Supabase client
 import { signInWithPopup, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword as firebaseSignInWithEmail } from "firebase/auth";
 import axios from "axios"; // For API calls
 import { authConfig } from '../config/authConfig'; // Import the authConfig object
+import { addUserDataToFirebase } from "./firebaseService";
 
 const authProvider = authConfig.provider; // Access the provider from authConfig
 
@@ -36,10 +37,10 @@ if (authProvider === "firebase") {
         email: user.email,
         phoneNumber,
         provider: 'email',
-        dash_type: dashType
+        dash_type: dashType || "sales_dashboard"
       };
 
-      await saveUserToDatabase(userData); // Save user to database (Firebase/MySQL)
+      await addUserDataToFirebase("users",userData); // Save user to database (Firebase/MySQL)
       saveUserToLocalStorage(userData);
 
       return userData;

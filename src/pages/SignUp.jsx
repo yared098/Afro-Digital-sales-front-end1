@@ -1,13 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import {
-  signUpWithEmailAndPassword,
-  signInWithGoogle,
-  signInWithFacebook,
-  getUserFromLocalStorage
-} from "../services/authService";
-import { FaGoogle, FaFacebook, FaTelegram, FaInstagram } from "react-icons/fa";
+import { signUpWithEmailAndPassword, getUserFromLocalStorage } from "../services/authService";
 import { motion } from "framer-motion";
 
 const SignUp = () => {
@@ -16,33 +9,34 @@ const SignUp = () => {
   const [username, setUsername] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [error, setError] = useState("");
-
-  const location = useLocation(); // Access the current location object
+  const [loading, setLoading] = useState(false);
+  
+  const location = useLocation();
   const navigate = useNavigate();
   const [dashType, setDashType] = useState('');
 
   useEffect(() => {
-    // Extract query parameters from the URL
     const queryParams = new URLSearchParams(location.search);
-    const type = queryParams.get('dash_type'); // Get the value of dash_type parameter
-
+    const type = queryParams.get('dash_type');
     if (type) {
-      setDashType(type); // Set the dash_type if available
+      setDashType(type);
     }
   }, [location.search]);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
     try {
-      const userData = await signUpWithEmailAndPassword(email, password, username, phoneNumber,dashType);
-      const user = await getUserFromLocalStorage(); // Fetch user details
-
+      await signUpWithEmailAndPassword(email, password, username, phoneNumber, dashType);
+      const user = await getUserFromLocalStorage();
       redirectToDashboard(user.dash_type);
-
     } catch (error) {
       setError(error.message || "Error signing up. Please try again.");
     }
+    setLoading(false);
   };
+
   const redirectToDashboard = (dashType) => {
     switch (dashType) {
       case "sales_dashboard":
@@ -56,8 +50,6 @@ const SignUp = () => {
     }
   };
 
-
-
   return (
     <div className="bg-gradient-to-br from-green-400 to-white w-full min-h-screen flex justify-center items-center">
       <motion.div
@@ -68,88 +60,26 @@ const SignUp = () => {
       >
         <h2 className="text-3xl font-semibold text-center text-gray-800">Sign Up</h2>
 
-        {/* Sign-Up Form */}
         <form onSubmit={handleSignUp} className="mt-6 space-y-4">
-          <div className="flex flex-col">
-            <label htmlFor="username" className="text-sm font-medium text-gray-700">
-              Username
-            </label>
-            <input
-              type="text"
-              id="username"
-              placeholder="Enter your username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="p-3 mt-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label htmlFor="email" className="text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="p-3 mt-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label htmlFor="phone" className="text-sm font-medium text-gray-700">
-              Phone Number
-            </label>
-            <input
-              type="text"
-              id="phone"
-              placeholder="Enter your phone number"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              className="p-3 mt-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label htmlFor="password" className="text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="p-3 mt-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-
+          <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} className="p-3 w-full border rounded-lg" required />
+          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="p-3 w-full border rounded-lg" required />
+          <input type="text" placeholder="Phone Number" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} className="p-3 w-full border rounded-lg" />
+          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="p-3 w-full border rounded-lg" required />
           {error && <p className="text-red-500 text-sm">{error}</p>}
 
-          {/* Sign-Up Button */}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             type="submit"
-            className="w-full p-3 mt-4 bg-blue-500 text-white font-semibold rounded-lg shadow hover:bg-blue-600"
+            className="w-full p-3 mt-4 flex justify-center items-center bg-blue-500 text-white font-semibold rounded-lg shadow hover:bg-blue-600"
+            disabled={loading}
           >
-            Sign Up
+            {loading ? <span className="animate-spin rounded-full h-5 w-5 border-t-2 border-white"></span> : "Sign Up"}
           </motion.button>
         </form>
 
-
-
-        {/* Login Redirect */}
         <p className="mt-6 text-center text-sm text-gray-600">
-          Already have an account?{" "}
-          <a href="/login" className="text-blue-500 hover:underline">
-            Login
-          </a>
+          Already have an account? <a href="/login" className="text-blue-500 hover:underline">Login</a>
         </p>
       </motion.div>
     </div>

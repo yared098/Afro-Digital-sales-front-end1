@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaPlus, FaFilter } from 'react-icons/fa';
+import { services } from '../services/ServiceFactory'; // Import your services
 
 const AdminSalesPage = () => {
   const [activeTab, setActiveTab] = useState('accepted');
@@ -20,28 +21,40 @@ const AdminSalesPage = () => {
     address: '',
   });
   const [isFilterBoxOpen, setIsFilterBoxOpen] = useState(false);
+  const [salesData, setSalesData] = useState([]); // State to hold fetched sales data
 
-  // Sample data
-  const salesData = {
-    accepted: [
-      { id: 1, item: 'Laptop', buyer: 'John', location: 'New York', address: '123 Main St', status: 'Accepted' },
-      { id: 2, item: 'Phone', buyer: 'Mary', location: 'Los Angeles', address: '456 Oak St', status: 'Accepted' },
-    ],
-    rejected: [
-      { id: 3, item: 'TV', buyer: 'Steve', location: 'Chicago', address: '789 Pine St', status: 'Rejected' },
-    ],
-    pending: [
-      { id: 4, item: 'Watch', buyer: 'Paul', location: 'San Francisco', address: '321 Birch St', status: 'Pending' },
-      { id: 5, item: 'Headphones', buyer: 'Emma', location: 'Miami', address: '654 Cedar St', status: 'Pending' },
-    ],
-  };
+  useEffect(() => {
+    const fetchSales = async () => {
+      try {
+        let data;
+        // Fetch sales based on active tab (accepted, rejected, pending, or all)
+        if (activeTab === 'accepted') {
+          data = await services.sales.getSaleByStatus('accepted');
+        } else if (activeTab === 'rejected') {
+          data = await services.sales.getSaleByStatus('rejected');
+        } else if (activeTab === 'pending') {
+          data = await services.sales.getSaleByStatus('pending');
+        } else if (activeTab === 'all') {
+          data = await services.sales.getAllSales(); // Fetch all sales
+        }
+        setSalesData(data); // Update state with fetched data
+      } catch (error) {
+        console.error('Error fetching sales data:', error);
+      }
+    };
+  
+    fetchSales();
+  }, [activeTab]);
 
-  const filteredData = salesData[activeTab].filter((sale) =>
-    sale.item.toLowerCase().includes(searchTerm.toLowerCase()) &&
-    sale.buyer.toLowerCase().includes(filters.name.toLowerCase()) &&
-    sale.location.toLowerCase().includes(filters.location.toLowerCase()) &&
-    sale.address.toLowerCase().includes(filters.address.toLowerCase())
-  );
+  const filteredData = salesData.filter((sale) => {
+    return (
+      (sale.item && sale.item.toLowerCase().includes(searchTerm.toLowerCase())) &&
+      (sale.fullname && sale.fullname.toLowerCase().includes(filters.name.toLowerCase())) &&
+      (sale.location && sale.location.toLowerCase().includes(filters.location.toLowerCase())) &&
+      (sale.address && sale.address.toLowerCase().includes(filters.address.toLowerCase()))
+    );
+  });
+  
 
   const handleFABClick = () => {
     setIsFormOpen(true);
@@ -70,29 +83,24 @@ const AdminSalesPage = () => {
   };
 
   const handleStatusChange = (saleId, newStatus) => {
-    // Update the sale status based on the button clicked (Accept/Reject)
-    const updatedSalesData = { ...salesData };
-    const sale = updatedSalesData.pending.find((sale) => sale.id === saleId);
+    const updatedSalesData = [...salesData];
+    const sale = updatedSalesData.find((sale) => sale.s_id === saleId); // Use `s_id` from your model
     if (sale) {
       sale.status = newStatus;
-      // Move the sale to the appropriate tab (accepted/rejected)
-      updatedSalesData[newStatus.toLowerCase()].push(sale);
-      updatedSalesData.pending = updatedSalesData.pending.filter((sale) => sale.id !== saleId);
-      setSelectedSale(null); // Deselect after action
+      setSalesData(updatedSalesData); // Update state
     }
-    setActiveTab(newStatus.toLowerCase());
   };
 
   const renderSalesList = () => {
     return filteredData.map((sale) => (
       <tr
-        key={sale.id}
+        key={sale.s_id}
         onClick={() => setSelectedSale(sale)}
         className="cursor-pointer hover:bg-gray-100"
       >
-        <td className="border px-6 py-2">{sale.id}</td>
+        <td className="border px-6 py-2">{sale.s_id}</td>
         <td className="border px-6 py-2">{sale.item}</td>
-        <td className="border px-6 py-2">{sale.buyer}</td>
+        <td className="border px-6 py-2">{sale.fullname}</td>
         <td className="border px-6 py-2">{sale.location}</td>
         <td className="border px-6 py-2">{sale.address}</td>
         <td className="border px-6 py-2">{sale.status}</td>
@@ -104,7 +112,7 @@ const AdminSalesPage = () => {
     <div className="relative p-6 min-h-screen bg-gray-50">
       {/* Tabs and Search */}
       <div className="flex space-x-6 items-center mb-4">
-        {['accepted', 'rejected', 'pending'].map((tab) => (
+        {['accepted', 'rejected', 'pending', 'all'].map((tab) => (
           <button
             key={tab}
             className={`px-4 py-2 rounded-lg font-medium text-sm transition duration-200 ${
@@ -123,7 +131,6 @@ const AdminSalesPage = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-
       {/* Filter Icon and Box */}
       <div className="flex items-center mb-6">
         <button
@@ -205,7 +212,7 @@ const AdminSalesPage = () => {
             </div>
             <div className="mb-4">
               <div className="font-medium text-gray-700">Buyer:</div>
-              <div className="text-gray-900">{selectedSale.buyer}</div>
+              <div className="text-gray-900">{selectedSale.fullname}</div>
             </div>
             <div className="mb-4">
               <div className="font-medium text-gray-700">Location:</div>
@@ -215,114 +222,124 @@ const AdminSalesPage = () => {
               <div className="font-medium text-gray-700">Address:</div>
               <div className="text-gray-900">{selectedSale.address}</div>
             </div>
-            <div className="mb-4">
-              <div className="font-medium text-gray-700">Status:</div>
-              <div className="text-gray-900">{selectedSale.status}</div>
+            <div className="mt-auto">
+              <button
+                onClick={() => handleStatusChange(selectedSale.s_id, 'rejected')}
+                className="px-4 py-2 bg-red-500 text-white rounded-md w-full mb-2"
+              >
+                Reject
+              </button>
+              <button
+                onClick={() => handleStatusChange(selectedSale.s_id, 'accepted')}
+                className="px-4 py-2 bg-green-500 text-white rounded-md w-full"
+              >
+                Accept
+              </button>
             </div>
-
-            {/* Accept/Reject Buttons */}
-            {selectedSale.status === 'Pending' && (
-              <div className="mt-6 flex space-x-4">
-                <button
-                  onClick={() => handleStatusChange(selectedSale.id, 'Accepted')}
-                  className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-700"
-                >
-                  Accept
-                </button>
-                <button
-                  onClick={() => handleStatusChange(selectedSale.id, 'Rejected')}
-                  className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-700"
-                >
-                  Reject
-                </button>
-              </div>
-            )}
           </div>
         )}
       </div>
 
       {/* Floating Action Button */}
-      <button
-        onClick={handleFABClick}
-        className="fixed bottom-6 right-6 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-700"
-      >
-        <FaPlus />
-      </button>
+      <div className="fixed bottom-6 right-6 z-50">
+        <button
+          onClick={handleFABClick}
+          className="bg-blue-500 text-white rounded-full p-4 shadow-lg hover:bg-blue-600"
+        >
+          <FaPlus className="text-2xl" />
+        </button>
+      </div>
 
       {/* New Sale Form */}
       {isFormOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-2xl font-semibold mb-4">Add New Sale</h2>
-            <form onSubmit={handleFormSubmit}>
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Item</label>
-                <input
-                  type="text"
-                  className="w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  value={newSale.item}
-                  onChange={(e) => setNewSale({ ...newSale, item: e.target.value })}
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Buyer</label>
-                <input
-                  type="text"
-                  className="w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  value={newSale.buyer}
-                  onChange={(e) => setNewSale({ ...newSale, buyer: e.target.value })}
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Email</label>
-                <input
-                  type="email"
-                  className="w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  value={newSale.email}
-                  onChange={(e) => setNewSale({ ...newSale, email: e.target.value })}
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Phone</label>
-                <input
-                  type="tel"
-                  className="w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  value={newSale.phone}
-                  onChange={(e) => setNewSale({ ...newSale, phone: e.target.value })}
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Category</label>
-                <input
-                  type="text"
-                  className="w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  value={newSale.category}
-                  onChange={(e) => setNewSale({ ...newSale, category: e.target.value })}
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Password</label>
-                <input
-                  type="password"
-                  className="w-full px-4 py-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  value={newSale.password}
-                  onChange={(e) => setNewSale({ ...newSale, password: e.target.value })}
-                  required
-                />
-              </div>
+        <div className="fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <form
+            onSubmit={handleFormSubmit}
+            className="bg-white p-8 rounded-lg shadow-lg w-96"
+          >
+            <h3 className="text-xl font-semibold mb-4">Add New Sale</h3>
+            <div className="mb-4">
+              <label className="block text-gray-700">Item</label>
+              <input
+                type="text"
+                className="w-full p-2 border rounded-md"
+                value={newSale.item}
+                onChange={(e) =>
+                  setNewSale((prev) => ({ ...prev, item: e.target.value }))
+                }
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Buyer</label>
+              <input
+                type="text"
+                className="w-full p-2 border rounded-md"
+                value={newSale.buyer}
+                onChange={(e) =>
+                  setNewSale((prev) => ({ ...prev, buyer: e.target.value }))
+                }
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Email</label>
+              <input
+                type="email"
+                className="w-full p-2 border rounded-md"
+                value={newSale.email}
+                onChange={(e) =>
+                  setNewSale((prev) => ({ ...prev, email: e.target.value }))
+                }
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Phone</label>
+              <input
+                type="text"
+                className="w-full p-2 border rounded-md"
+                value={newSale.phone}
+                onChange={(e) =>
+                  setNewSale((prev) => ({ ...prev, phone: e.target.value }))
+                }
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Password</label>
+              <input
+                type="password"
+                className="w-full p-2 border rounded-md"
+                value={newSale.password}
+                onChange={(e) =>
+                  setNewSale((prev) => ({ ...prev, password: e.target.value }))
+                }
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Category</label>
+              <input
+                type="text"
+                className="w-full p-2 border rounded-md"
+                value={newSale.category}
+                onChange={(e) =>
+                  setNewSale((prev) => ({ ...prev, category: e.target.value }))
+                }
+              />
+            </div>
+            <div className="flex justify-between">
+              <button
+                type="button"
+                onClick={() => setIsFormOpen(false)}
+                className="bg-gray-500 text-white rounded-md py-2 px-4"
+              >
+                Cancel
+              </button>
               <button
                 type="submit"
-                className="w-full px-4 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-800"
+                className="bg-blue-500 text-white rounded-md py-2 px-4"
               >
-                Add Sale
+                Save
               </button>
-            </form>
-          </div>
+            </div>
+          </form>
         </div>
       )}
     </div>
