@@ -14,7 +14,7 @@ const Sidebar = ({ menuItems, onMenuClick, DashboardName }) => {
 
   return (
     <div
-      className={`h-screen sticky top-0 rounded-tr-2xl rounded-br-2xl bg-green-600/90 text-white shadow-lg  transition-all duration-300 
+      className={`h-screen sticky top-0 rounded-tr-2xl rounded-br-2xl bg-[#1F2937] text-white shadow-lg  transition-all duration-300 
         ${isCollapsed ? 'w-20' : 'w-64'} flex flex-col`}
     >
       {/* Sidebar Header */}
@@ -34,7 +34,7 @@ const Sidebar = ({ menuItems, onMenuClick, DashboardName }) => {
                 onClick={() => handleMenuClick(item.link, index)}
                 className={`flex items-center gap-4 px-5 py-3 w-full text-left text-lg rounded-lg transition-all duration-300 
                   ${isCollapsed ? 'justify-center' : ''} 
-                  ${activeItem === index ? 'bg-gradient-to-r from-green-500 to-green-400 shadow-md' : 'hover:bg-green-500/70'}`}
+                  ${activeItem === index ? 'bg-gradient-to-r from-blue-800 to-blue-500 shadow-md' : 'hover:bg-blue-300/70'}`}
               >
                 <item.icon size={22} />
                 <span className={`${isCollapsed ? 'hidden' : 'block'}`}>{item.name}</span>
