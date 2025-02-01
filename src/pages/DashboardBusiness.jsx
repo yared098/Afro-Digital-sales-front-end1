@@ -154,7 +154,7 @@ const BusinessDashboard = () => {
 
       {/* Main Content */}
       <div className="flex-1 p-4">
-        <nav className="flex items-center justify-between p-4 bg-gray-800">
+        <nav className="flex items-center justify-between p-4 bg-gray-800 rounded-lg shadow-2xl">
           <h1 className="text-xl text-white">Business Dashboard</h1>
           {/* Right-aligned circular icons */}
           <div className="flex space-x-4">
