@@ -18,7 +18,7 @@ const Sidebar = ({ menuItems, onMenuClick, DashboardName }) => {
         ${isCollapsed ? 'w-20' : 'w-64'} flex flex-col`}
     >
       {/* Sidebar Header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-green-400">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-white-400">
         {!isCollapsed && <h2 className="text-xl font-semibold">{DashboardName}</h2>}
         <button onClick={toggleSidebar} className="p-2 text-white transition-all hover:text-green-300">
           {isCollapsed ? <FaBars size={20} /> : <FaTimes size={20} />}
