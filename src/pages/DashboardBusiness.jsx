@@ -9,6 +9,7 @@ import AdminSalesPage from "./AdminSalesPage";
 import BusinessOverview from "./BusinessOverview";
 import { useAuth } from "../context/AuthContext";
 import ShowChart from '../components/ShowChart';
+import VendorSetting from "../pages/VendorSetting";
 
 const BusinessDashboard = () => {
   const [activeSection, setActiveSection] = useState("overview");
@@ -139,7 +140,7 @@ const BusinessDashboard = () => {
       case "profile":
         return <ProfilePage />;
       case "settings":
-        return <div>Settings Content</div>;
+        return <VendorSetting/>
       case "logout":
         logout();
       default:
