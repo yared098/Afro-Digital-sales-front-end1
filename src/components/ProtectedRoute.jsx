@@ -53,7 +53,6 @@ const ProtectedRoute = ({ children, requiredDashType }) => {
           <div className="flex items-center justify-center w-32 h-32 mx-auto bg-green-500 rounded-full animate-zoom-in">
             <img src={logo} alt="Afro Digital Sales Logo" className="w-24 h-24 rounded-full animate-spin" />
           </div>
-          <p className="mt-4 text-lg font-semibold text-gray-700">Loading...</p>
         </div>
       </div>
     );

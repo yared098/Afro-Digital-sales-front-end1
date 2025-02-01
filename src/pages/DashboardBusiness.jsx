@@ -5,7 +5,7 @@ import Sidebar from "../components/Sidebar";
 import BusinessProducts from "./BusinessProducts";
 import BusinessOrder from "./BusinessOrder";
 import ProfilePage from "./ProfilePage";
-import AdminSalesPage from "./AdminSalesPage";
+import BusinessSalesPage from "./BusinessSalesPage";
 import BusinessOverview from "./BusinessOverview";
 import { useAuth } from "../context/AuthContext";
 import ShowChart from '../components/ShowChart';
@@ -135,7 +135,7 @@ const BusinessDashboard = () => {
       case "orders":
         return <BusinessOrder />;
       case "sales":
-        return <AdminSalesPage />;
+        return <BusinessSalesPage />;
       case "profile":
         return <ProfilePage />;
       case "settings":
