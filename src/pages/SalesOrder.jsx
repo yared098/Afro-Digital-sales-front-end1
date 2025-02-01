@@ -82,7 +82,7 @@ const SalesOrder = () => {
             {filteredOrders.map((item) => (
               <div
                 key={item.id}
-                className={`w-full p-4 rounded-lg shadow-md cursor-pointer ${
+                className={`w-full mb-8 p-4 rounded-lg shadow-md cursor-pointer ${
                   item.status === 'Accepted' ? 'bg-green-100' : 'bg-yellow-100'
                 }`}
                 onClick={() => handleOrderClick(item)}
