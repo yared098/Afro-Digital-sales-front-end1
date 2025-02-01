@@ -14,7 +14,7 @@ const Sidebar = ({ menuItems, onMenuClick, DashboardName }) => {
 
   return (
     <div
-      className={`h-screen sticky top-0 bg-green-600/90 text-white shadow-lg rounded-2xl transition-all duration-300 
+      className={`h-screen sticky top-0 rounded-tr-2xl rounded-br-2xl bg-green-600/90 text-white shadow-lg  transition-all duration-300 
         ${isCollapsed ? 'w-20' : 'w-64'} flex flex-col`}
     >
       {/* Sidebar Header */}

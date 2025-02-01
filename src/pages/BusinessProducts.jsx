@@ -127,7 +127,7 @@ const deleteProduct = async (productId) => {
             <input
               type="text"
               value={newProduct.p_name}
-              onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+              onChange={(e) => setNewProduct({ ...newProduct, p_name: e.target.value })}
               className="w-full p-4 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               required
             />
