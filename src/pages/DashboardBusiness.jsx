@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaBuilding, FaBell, FaClipboardList,FaShoppingCart,FaTags, FaHome,FaUser, FaSignOutAlt, FaBox, FaChartLine, FaCog, FaGavel } from "react-icons/fa";
+import { FaBuilding, FaBell, FaClipboardList, FaShoppingCart, FaTags, FaHome, FaUser, FaSignOutAlt, FaBox, FaChartLine, FaCog, FaGavel } from "react-icons/fa";
 import DashboardCard from '../components/DashboardCard';
 import Sidebar from "../components/Sidebar";
 import BusinessProducts from "./BusinessProducts";
@@ -14,7 +14,7 @@ const BusinessDashboard = () => {
   const [activeSection, setActiveSection] = useState("overview");
   const [showNotifications, setShowNotifications] = useState(false);
   const { user, logout } = useAuth();
-    const [chartType, setChartType] = useState('line');
+  const [chartType, setChartType] = useState('line');
 
   // Example notification counts
   const counts = {
@@ -24,11 +24,22 @@ const BusinessDashboard = () => {
     bids: 3,
   };
   const [stats, setStats] = useState({
-      businesses: 0,
-      sales: 0,
-      orders: 0,
-      products: 0,
-    });
+    businesses: 0,
+    sales: 0,
+    orders: 0,
+    products: 0,
+  });
+
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      localStorage.removeItem('user');
+      navigate('/login');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
 
   const notifications = [
     "New order received!",
@@ -62,7 +73,7 @@ const BusinessDashboard = () => {
   };
 
   const menuItems = [
-     { name: 'Overview', link: 'overview', icon: FaHome },
+    { name: 'Overview', link: 'overview', icon: FaHome },
     { name: 'Business Overview', link: 'overview', icon: FaBuilding },
     { name: 'Notifications', link: 'notifications', icon: FaBell },  // FaBell for notifications
     { name: 'Orders', link: 'orders', icon: FaClipboardList },       // FaClipboardList for orders
@@ -147,9 +158,64 @@ const BusinessDashboard = () => {
       <div className="flex-1 p-4">
         <nav className="flex items-center justify-between p-4 bg-gray-800">
           <h1 className="text-xl text-white">Business Dashboard</h1>
-          <button onClick={handleLogout} className="px-4 py-2 text-white bg-yellow-500 rounded hover:bg-red-600">
-            Log Out
-          </button>
+          {/* Right-aligned circular icons */}
+          <div className="flex space-x-4">
+            {/* Notifications */}
+            <div className="relative">
+              <FaBell
+                className="text-white text-2xl cursor-pointer hover:text-yellow-400"
+                onClick={() => setShowNotifications(!showNotifications)}
+              />
+              {counts.notifications > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-2">
+                  {counts.notifications}
+                </span>
+              )}
+              {showNotifications && (
+                <div className="absolute right-0 mt-2 w-48 bg-white text-black shadow-lg rounded-lg p-2 z-10">
+                  <button
+                    className="absolute top-2 right-2 text-sm text-gray-500"
+                    onClick={() => setShowNotifications(false)}
+                  >
+                    <FaSignOutAlt size={12} />
+                  </button>
+                  <h3 className="font-semibold border-b pb-2">Notifications</h3>
+                  <ul>
+                    {notifications.map((note, index) => (
+                      <li key={index} className="py-1 border-b last:border-b-0">{note}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+
+            {/* Sales */}
+            <div className="relative">
+              <FaShoppingCart
+                className="text-white text-2xl cursor-pointer hover:text-green-400"
+                onClick={() => handleSectionChange('orders')}
+              />
+              {counts.sales > 0 && (
+                <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs rounded-full px-2">
+                  {counts.sales}
+                </span>
+              )}
+            </div>
+
+            {/* Orders */}
+            <div className="relative">
+              <FaBox
+                className="text-white text-2xl cursor-pointer hover:text-blue-400"
+                onClick={() => handleSectionChange('orders')}
+              />
+              {counts.orders > 0 && (
+                <span className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs rounded-full px-2">
+                  {counts.orders}
+                </span>
+              )}
+            </div>
+          </div>
+          
         </nav>
 
         {/* Page Content */}
